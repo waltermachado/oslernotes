@@ -9,7 +9,9 @@ function resolveUrl(path: string) {
   const normalized = normalizePath(path)
   const base = String(import.meta.env.VITE_API_BASE_URL ?? '').trim()
   if (!base) return normalized
-  return new URL(normalized, base.endsWith('/') ? base : `${base}/`).toString()
+  if (normalized.startsWith('http://') || normalized.startsWith('https://')) return normalized
+  const cleanedBase = base.endsWith('/') ? base.slice(0, -1) : base
+  return `${cleanedBase}${normalized}`
 }
 
 export async function apiFetch(path: string, init?: RequestInit) {
