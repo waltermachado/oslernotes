@@ -1,0 +1,1 @@
+ALTER TABLE public.usuarios ALTER COLUMN clinica_id DROP NOT NULL;
