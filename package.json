@@ -7,7 +7,7 @@
     "client:dev": "vite --port 4000",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "preview": "npm run build && wrangler dev",
     "check": "tsc --noEmit",
     "server:dev": "PORT=3010 nodemon --watch api --exec node --loader ts-node/esm api/server.ts",
     "dev": "concurrently \"npm run client:dev\" \"npm run server:dev\"",
@@ -18,7 +18,8 @@
     "mock:nexano:webhook": "tsx scripts/mock_nexano_webhook.ts",
     "retries:process": "tsx scripts/process_provisioning_retries.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.100.0",
@@ -38,14 +39,15 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.37.0",
     "@eslint/js": "^9.25.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.12",
     "@types/node": "^22.15.30",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@types/multer": "^1.4.12",
     "@types/supertest": "^6.0.3",
     "@types/swagger-ui-express": "^4.1.8",
     "@vercel/node": "^5.3.6",
@@ -60,6 +62,7 @@
     "nodemon": "^3.1.10",
     "postcss": "^8.5.3",
     "supabase": "^2.83.0",
+    "supertest": "^7.1.1",
     "tailwindcss": "^3.4.17",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.3",
@@ -69,6 +72,6 @@
     "vite-plugin-trae-solo-badge": "^1.0.0",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^2.1.9",
-    "supertest": "^7.1.1"
+    "wrangler": "^4.91.0"
   }
 }
