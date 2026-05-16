@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { Plus, Search, Building2, LogOut } from 'lucide-react';
 import AddClinicModal from '../components/AddClinicModal';
 import { useNavigate } from 'react-router-dom';
+import BrandLogo from '../components/brand/BrandLogo'
 
 interface Clinic {
   id: string;
@@ -64,10 +65,10 @@ export default function Backoffice() {
       <header className="bg-dark-card border-b border-gray-800 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-8 h-8 bg-brand-blue rounded-lg flex items-center justify-center font-bold text-white">
-              O
+            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+              <BrandLogo className="w-6 h-6" />
             </div>
-            <h1 className="text-xl font-bold tracking-tight">OSLER <span className="text-gray-500 font-normal">| Backoffice</span></h1>
+            <h1 className="text-xl font-bold tracking-tight">OSLER NOTES <span className="text-gray-500 font-normal">| Backoffice</span></h1>
           </div>
           
           <div className="flex items-center gap-4">

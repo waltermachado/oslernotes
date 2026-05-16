@@ -21,6 +21,7 @@ import ClinicoPacientesPage from './pages/clinico/ClinicoPacientesPage';
 import ClinicoProntuariosPage from './pages/clinico/ClinicoProntuariosPage';
 import ClinicoProntuarioPacientePage from './pages/clinico/ClinicoProntuarioPacientePage';
 import ClinicoFilaPage from './pages/clinico/ClinicoFilaPage';
+import ClinicoAgendaPage from './pages/clinico/ClinicoAgendaPage';
 
 const Atendimento = () => <div className="p-8"><h1>Módulo Atendimento (Em breve)</h1></div>;
 
@@ -50,7 +51,7 @@ function App() {
           <Route element={<ProtectedRoute allowedRoles={['admin', 'medico', 'atendente']} />}>
             <Route path="/clinico" element={<ClinicoLayout />}>
               <Route index element={<Navigate to="painel" replace />} />
-              <Route path="agenda" element={<ClinicoPlaceholderPage title="Agenda" />} />
+              <Route path="agenda" element={<ClinicoAgendaPage />} />
               <Route path="fila" element={<ClinicoFilaPage />} />
               <Route path="painel" element={<ClinicoPainelPage />} />
               <Route path="pacientes" element={<ClinicoPacientesPage />} />
@@ -66,7 +67,7 @@ function App() {
           <Route element={<ProtectedRoute allowedRoles={['medico']} />}>
             <Route path="/medico" element={<ClinicoLayout basePath="/medico" />}>
               <Route index element={<Navigate to="painel" replace />} />
-              <Route path="agenda" element={<ClinicoPlaceholderPage title="Agenda" />} />
+              <Route path="agenda" element={<ClinicoAgendaPage />} />
               <Route path="fila" element={<ClinicoFilaPage />} />
               <Route path="painel" element={<ClinicoPainelPage />} />
               <Route path="pacientes" element={<ClinicoPacientesPage />} />

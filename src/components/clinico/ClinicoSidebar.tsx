@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { cn } from '../../lib/utils'
 import { useAuth } from '../../context/AuthContext'
 import { navForRole, type ClinicoRole } from '../../utils/clinicoNav'
+import BrandLogo from '../brand/BrandLogo'
 
 export default function ClinicoSidebar(props: { role: ClinicoRole; userName: string; userSubtitle: string; basePath?: string }) {
   const { signOut } = useAuth()
@@ -20,11 +21,11 @@ export default function ClinicoSidebar(props: { role: ClinicoRole; userName: str
     <aside className="w-[260px] shrink-0 border-r border-gray-800 bg-dark-card/20">
       <div className="h-16 px-5 flex items-center gap-3 border-b border-gray-800">
         <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center overflow-hidden">
-          <span className="text-brand-blue font-bold">O</span>
+          <BrandLogo className="w-7 h-7" />
         </div>
         <div className="leading-tight">
-          <div className="text-white font-semibold tracking-tight">Osler</div>
-          <div className="text-[10px] text-gray-400 tracking-[0.22em] uppercase">Health System</div>
+          <div className="text-white font-semibold tracking-tight">Osler Notes</div>
+          <div className="text-[10px] text-gray-400 tracking-[0.22em] uppercase">Prontuário eletrônico</div>
         </div>
       </div>
 

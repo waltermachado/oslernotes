@@ -1,3 +1,7 @@
+# Responsável apenas pelo backend (migrations + Edge Functions).
+# O frontend é deployado automaticamente pelo Cloudflare Pages
+# via integração nativa com o repositório GitHub.
+
 name: Deploy Supabase
 
 on:

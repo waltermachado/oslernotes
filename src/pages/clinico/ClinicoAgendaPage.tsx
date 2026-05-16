@@ -1,17 +1,86 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { ChevronLeft, ChevronRight, RefreshCcw } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 
 import AgendaDayView from '../../components/clinico/AgendaDayView'
-import type { Appointment } from '../../components/clinico/AppointmentCard'
+import type { Appointment, AppointmentStatus } from '../../components/clinico/AppointmentCard'
+import { useAuth } from '../../context/AuthContext'
+import { apiFetch } from '../../lib/apiFetch'
 import { cn } from '../../lib/utils'
 
 type ViewMode = 'day' | 'week' | 'month'
 
+type QueueItem = {
+  id: string
+  paciente_id: string
+  status: 'aguardando' | 'agendado' | 'em_atendimento' | 'finalizado'
+  prioridade: number | null
+  scheduled_time: string | null
+  pacientes?: {
+    id: string
+    nome_completo: string
+  } | null
+}
+
+function toAppointmentStatus(s: QueueItem['status']): AppointmentStatus {
+  if (s === 'em_atendimento') return 'CONFIRMADO'
+  if (s === 'aguardando') return 'AGUARDANDO'
+  if (s === 'finalizado') return 'CANCELADO'
+  return 'AGENDADO'
+}
+
+function initials(name: string) {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join('')
+}
+
+function isSameDay(a: Date, b: Date) {
+  return a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+}
+
 export default function ClinicoAgendaPage() {
+  const { session } = useAuth()
+  const token = session?.access_token
+
   const [mode, setMode] = useState<ViewMode>('day')
-  const [date, setDate] = useState(() => new Date(2024, 9, 24, 10, 45))
-  const now = useMemo(() => new Date(date), [date])
+  const [date, setDate] = useState(() => new Date())
+  const [now, setNow] = useState(() => new Date())
+  const [items, setItems] = useState<QueueItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Atualiza o marcador de hora atual a cada minuto
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  useEffect(() => {
+    intervalRef.current = setInterval(() => setNow(new Date()), 60_000)
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
+  }, [])
+
+  const load = useCallback(async () => {
+    if (!token) return
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await apiFetch('/api/queue?status=agendado,aguardando,em_atendimento', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const body = await res.json() as { items?: QueueItem[]; error?: string }
+      if (!res.ok) throw new Error(body.error || 'Falha ao carregar agenda')
+      setItems(body.items ?? [])
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Erro ao carregar agenda')
+    } finally {
+      setLoading(false)
+    }
+  }, [token])
+
+  useEffect(() => { load() }, [load])
 
   const subtitle = useMemo(() => {
     const weekday = new Intl.DateTimeFormat('pt-BR', { weekday: 'long' }).format(date)
@@ -21,65 +90,25 @@ export default function ClinicoAgendaPage() {
     return `${capitalize(weekday)}, ${day} de ${capitalize(month)} de ${year}`
   }, [date])
 
-  const appointments = useMemo<Appointment[]>(
-    () => [
-      {
-        id: 'a1',
-        patientName: 'Ricardo Alencar',
-        patientInitials: 'RA',
-        description: 'Consulta de Rotina - Cardiologia',
-        status: 'CONFIRMADO',
-        startMinutes: 9 * 60,
-        durationMinutes: 30,
-      },
-      {
-        id: 'a2',
-        patientName: 'Maria Silvia Santos',
-        patientInitials: 'MS',
-        description: 'Eletrocardiograma (ECG)',
-        status: 'AGUARDANDO',
-        startMinutes: 10 * 60,
-        durationMinutes: 45,
-      },
-      {
-        id: 'a3',
-        patientName: 'João de Oliveira',
-        patientInitials: 'JO',
-        description: 'Retorno Pós-Cirúrgico',
-        status: 'AGENDADO',
-        startMinutes: 11 * 60,
-        durationMinutes: 60,
-      },
-      {
-        id: 'a3b',
-        patientName: 'Amanda Ferreira',
-        patientInitials: 'AF',
-        description: 'Avaliação de Pressão Arterial',
-        status: 'AGENDADO',
-        startMinutes: 11 * 60 + 15,
-        durationMinutes: 30,
-      },
-      {
-        id: 'a4',
-        patientName: 'Fernanda Lima',
-        patientInitials: 'FL',
-        description: 'Teste Ergométrico',
-        status: 'CANCELADO',
-        startMinutes: 14 * 60,
-        durationMinutes: 45,
-      },
-      {
-        id: 'a5',
-        patientName: 'Carlos Henrique Pereira',
-        patientInitials: 'CH',
-        description: 'Consulta - Revisão de Exames e Ajuste de Medicação',
-        status: 'AGUARDANDO',
-        startMinutes: 10 * 60 + 30,
-        durationMinutes: 30,
-      },
-    ],
-    [],
-  )
+  const appointments = useMemo<Appointment[]>(() => {
+    return items
+      .filter((item) => item.scheduled_time && isSameDay(new Date(item.scheduled_time), date))
+      .map((item) => {
+        const dt = new Date(item.scheduled_time!)
+        const startMinutes = dt.getHours() * 60 + dt.getMinutes()
+        const name = item.pacientes?.nome_completo ?? 'Paciente'
+        return {
+          id: item.id,
+          patientName: name,
+          patientInitials: initials(name),
+          description: 'Consulta agendada',
+          status: toAppointmentStatus(item.status),
+          startMinutes,
+          durationMinutes: 30,
+        }
+      })
+      .sort((a, b) => a.startMinutes - b.startMinutes)
+  }, [items, date])
 
   return (
     <div className="p-6">
@@ -91,6 +120,15 @@ export default function ClinicoAgendaPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3 justify-start lg:justify-end">
+            <button
+              type="button"
+              aria-label="Atualizar agenda"
+              onClick={load}
+              className="p-2.5 rounded-xl bg-dark-card border border-gray-800 text-gray-400 hover:text-white hover:bg-gray-800/40 transition-colors"
+            >
+              <RefreshCcw className={cn('w-4 h-4', loading && 'animate-spin')} />
+            </button>
+
             <div className="flex items-center bg-dark-card border border-gray-800 rounded-xl overflow-hidden">
               <SegmentButton active={mode === 'day'} onClick={() => setMode('day')}>
                 Dia
@@ -121,8 +159,19 @@ export default function ClinicoAgendaPage() {
         </div>
 
         <div className="mt-6">
+          {error && (
+            <div className="mb-4 bg-red-500/10 border border-red-500/40 text-red-400 px-4 py-3 rounded-2xl text-sm">
+              {error}
+            </div>
+          )}
           {mode === 'day' ? (
-            <AgendaDayView date={date} now={now} appointments={appointments} />
+            loading && appointments.length === 0 ? (
+              <div className="bg-dark-card border border-gray-800 rounded-2xl p-10 text-center text-gray-400 text-sm">
+                Carregando agenda...
+              </div>
+            ) : (
+              <AgendaDayView date={date} now={now} appointments={appointments} />
+            )
           ) : (
             <div className="bg-dark-card border border-gray-800 rounded-2xl p-10 text-center text-gray-300">
               Visualização {mode === 'week' ? 'Semanal' : 'Mensal'} em breve.

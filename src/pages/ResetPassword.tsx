@@ -1,20 +1,22 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Eye, EyeOff, Lock } from 'lucide-react'
 
-import { apiFetch } from '../lib/apiFetch'
+import { supabase } from '../lib/supabase'
 
 function validatePasswordPair(password: string, confirm: string) {
   if (!password) return 'Informe a nova senha.'
+  if (password.length < 10) return 'A senha deve ter no mínimo 10 caracteres.'
   if (password !== confirm) return 'A confirmação não confere.'
   return ''
 }
 
 export default function ResetPassword() {
   const navigate = useNavigate()
-  const token = useMemo(() => new URLSearchParams(window.location.search).get('token') ?? '', [])
 
-  const [validating, setValidating] = useState(true)
+  // O Supabase redireciona para /reset-password#access_token=...&type=recovery
+  // O supabase-js detecta automaticamente o token na URL e cria uma sessão temporária.
+  const [ready, setReady] = useState(false)
   const [tokenError, setTokenError] = useState('')
 
   const [password, setPassword] = useState('')
@@ -25,34 +27,34 @@ export default function ResetPassword() {
   const [success, setSuccess] = useState(false)
 
   useEffect(() => {
-    let cancelled = false
-    async function validate() {
-      if (!token) {
-        setTokenError('Link inválido.')
-        setValidating(false)
-        return
-      }
-
-      try {
-        const res = await apiFetch(`/api/auth/reset-password/validate?token=${encodeURIComponent(token)}`)
-        const body = (await res.json().catch(() => ({}))) as any
-        if (!res.ok) {
-          const code = String(body?.error ?? '')
-          if (code === 'token_expired') setTokenError('Este link expirou. Solicite um novo.')
-          else if (code === 'token_used') setTokenError('Este link já foi usado. Solicite um novo.')
-          else setTokenError('Link inválido.')
+    // Aguarda o supabase-js processar o hash da URL e estabelecer a sessão de recovery
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        // Sessão de recuperação estabelecida — pode prosseguir
+        setReady(true)
+        setTokenError('')
+      } else if (event === 'SIGNED_OUT' || event === 'SIGNED_IN') {
+        // Se não houve PASSWORD_RECOVERY, o link é inválido/expirado
+        if (!ready) {
+          setTokenError('Link inválido ou expirado. Solicite um novo.')
         }
-      } catch {
-        setTokenError('Falha de conexão. Tente novamente.')
-      } finally {
-        if (!cancelled) setValidating(false)
       }
-    }
-    validate()
+    })
+
+    // Timeout: se depois de 5s não chegou nenhum evento de recovery, o link é inválido
+    const timeout = setTimeout(() => {
+      setReady((current) => {
+        if (!current) setTokenError('Link inválido ou expirado. Solicite um novo.')
+        return current
+      })
+    }, 5000)
+
     return () => {
-      cancelled = true
+      subscription.unsubscribe()
+      clearTimeout(timeout)
     }
-  }, [token])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -65,14 +67,9 @@ export default function ResetPassword() {
 
     setSaving(true)
     try {
-      const res = await apiFetch('/api/auth/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, password }),
-      })
-      const body = (await res.json().catch(() => ({}))) as any
-      if (!res.ok) {
-        setError(String(body?.error ?? 'Não foi possível redefinir agora.'))
+      const { error: updateError } = await supabase.auth.updateUser({ password })
+      if (updateError) {
+        setError(updateError.message || 'Não foi possível redefinir a senha. Tente novamente.')
         return
       }
       setSuccess(true)
@@ -83,7 +80,8 @@ export default function ResetPassword() {
     }
   }
 
-  if (validating) {
+  // Aguardando verificação do token na URL
+  if (!ready && !tokenError) {
     return (
       <div className="min-h-screen bg-dark-bg flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-md bg-dark-card rounded-2xl shadow-xl border border-gray-800/50 p-8">
@@ -202,7 +200,7 @@ export default function ResetPassword() {
               />
             </div>
 
-            <div className="text-xs text-gray-500">Mínimo 10 caracteres, com maiúsculas, minúsculas e números.</div>
+            <div className="text-xs text-gray-500">Mínimo 10 caracteres.</div>
 
             <button
               type="submit"

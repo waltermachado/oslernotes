@@ -1,7 +1,7 @@
-# Instruções para a Construção do OslerNotes
+# Instruções para a Construção do Osler Notes
 
 ## 1. Contexto Geral do Projeto
-O OslerNotes é um sistema de prontuário eletrônico em modelo SaaS voltado para clínicas médicas. Ele oferece uma solução multi-tenant para gestão de pacientes, filas de atendimento, e registros clínicos. O foco atual é a construção da fundação do sistema: autenticação, controle de acesso baseado em papéis (RBAC), interface de login e o painel de administração (Backoffice) para cadastro de novas clínicas.
+O Osler Notes é um sistema de prontuário eletrônico em modelo SaaS voltado para clínicas médicas. Ele oferece uma solução multi-tenant para gestão de pacientes, filas de atendimento, e registros clínicos. O foco atual é a construção da fundação do sistema: autenticação, controle de acesso baseado em papéis (RBAC), interface de login e o painel de administração (Backoffice) para cadastro de novas clínicas.
 
 ## 2. Especificações Técnicas e Stack
 - Frontend: React 18, TypeScript, Tailwind CSS, Lucide React (para ícones), React Router DOM, Vite.
@@ -40,7 +40,7 @@ Crie rotas Express na pasta `api/routes/`:
 ### 4.3. Frontend - Interface de Login
 Desenvolva uma página de Login (`src/pages/Login.tsx`) que seja estritamente fiel ao seguinte design visual:
 - Tema: Dark Mode profundo. Fundo geral #0d1520, Fundo do Card #111926.
-- Cabeçalho: Logo centralizada em um círculo branco (usar tag <img> apontando para /logo.png), título "OSLER" em branco, subtítulo "HEALTH SYSTEM" em verde (#16a34a ou similar) com letter-spacing largo, e texto "Portal Seguro para Profissionais de Saúde" em cinza claro.
+- Cabeçalho: Logo centralizada em um círculo branco (componente SVG do sistema), título "OSLER NOTES" em branco, subtítulo "HEALTH SYSTEM" em verde (#16a34a ou similar) com letter-spacing largo, e texto "Portal Seguro para Profissionais de Saúde" em cinza claro.
 - Formulário:
   - Input "E-mail ou CPF" com ícone de usuário (lucide-react) à esquerda.
   - Input "Senha" com ícone de cadeado à esquerda e botão de mostrar/esconder senha à direita.

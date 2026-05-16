@@ -4,6 +4,7 @@ import { Bell, Building2, ClipboardList, CreditCard, LogOut } from 'lucide-react
 
 import { useAuth } from '../../context/AuthContext'
 import { cn } from '../../lib/utils'
+import BrandLogo from '../../components/brand/BrandLogo'
 
 const navItems = [
   { to: '/backoffice/clinicas', label: 'Clínicas', icon: Building2 },
@@ -26,10 +27,12 @@ export default function BackofficeLayout() {
       <header className="bg-dark-card border-b border-gray-800 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-8 h-8 bg-brand-blue rounded-lg flex items-center justify-center font-bold text-white">O</div>
+            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+              <BrandLogo className="w-6 h-6" />
+            </div>
             <div className="flex flex-col">
               <div className="text-lg font-bold tracking-tight leading-tight">
-                OSLER <span className="text-gray-500 font-normal">| Backoffice</span>
+                OSLER NOTES <span className="text-gray-500 font-normal">| Backoffice</span>
               </div>
               <div className="text-xs text-gray-500 leading-tight">Super Admin</div>
             </div>
@@ -81,4 +84,3 @@ export default function BackofficeLayout() {
     </div>
   )
 }
-

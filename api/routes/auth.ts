@@ -195,11 +195,42 @@ router.post('/forgot-password', async (req, res) => {
   const resetUrl = buildResetUrl({ appUrl, token });
 
   try {
+    const brandName = 'Osler Notes'
+    const baseUrl = appUrl.replace(/\/+$/, '')
+    const logoUrl = `${baseUrl}/brand/generated/png/oslerlogo-256x256.png`
     await sendMail({
       to: email,
-      subject: 'Recuperação de senha — OslerNotes',
+      subject: `Recuperação de senha — ${brandName}`,
       text: `Use o link a seguir para redefinir sua senha: ${resetUrl}`,
-      html: `<p>Use o link a seguir para redefinir sua senha:</p><p><a href="${resetUrl}">${resetUrl}</a></p>`,
+      html: `
+        <div style="background:#0A0B0D;padding:24px">
+          <div style="max-width:560px;margin:0 auto;background:#111214;border:1px solid #26282c;border-radius:18px;padding:24px;color:#ffffff;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+              <div style="width:44px;height:44px;background:#ffffff;border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+                <img src="${logoUrl}" width="44" height="44" alt="Osler Notes Logo" style="display:block" />
+              </div>
+              <div style="line-height:1.1">
+                <div style="font-size:16px;font-weight:700;letter-spacing:-0.01em">${brandName}</div>
+                <div style="font-size:12px;color:#9aa0a6;letter-spacing:0.08em;text-transform:uppercase">Recuperação de senha</div>
+              </div>
+            </div>
+
+            <div style="font-size:14px;color:#d6d9dd;line-height:1.55">
+              <p style="margin:0 0 12px">Use o botão abaixo para redefinir sua senha. Se você não solicitou esta ação, ignore este e-mail.</p>
+              <p style="margin:0 0 18px">
+                <a href="${resetUrl}" style="display:inline-block;background:#007AFF;color:#ffffff;text-decoration:none;padding:12px 16px;border-radius:12px;font-weight:600">Redefinir senha</a>
+              </p>
+              <p style="margin:0;color:#9aa0a6;font-size:12px">Se o botão não funcionar, copie e cole este link no navegador:</p>
+              <p style="margin:8px 0 0;word-break:break-all">
+                <a href="${resetUrl}" style="color:#7aa7ff;text-decoration:underline">${resetUrl}</a>
+              </p>
+            </div>
+          </div>
+          <div style="max-width:560px;margin:14px auto 0;text-align:center;color:#7b8088;font-size:11px;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+            © ${new Date().getFullYear()} ${brandName}
+          </div>
+        </div>
+      `,
     });
     await audit({ email, user_id: userRow.id, ip, user_agent: userAgent, action: 'EMAIL_TRIGGERED', result: 'OK' });
   } catch (e) {

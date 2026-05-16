@@ -50,7 +50,7 @@ export default function ClinicoFilaPage() {
     try {
       const url = new URL('/api/queue', window.location.origin)
       url.searchParams.set('status', status)
-      if (mine) url.searchParams.set('mine', '0')
+      if (mine) url.searchParams.set('mine', '1')
 
       const res = await fetch(url.pathname + url.search, { headers: { Authorization: `Bearer ${token}` } })
       const body = await res.json()

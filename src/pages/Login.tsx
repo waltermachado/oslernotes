@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Lock, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import BrandLogo from '../components/brand/BrandLogo'
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -44,14 +45,8 @@ export default function Login() {
         
         {/* Header */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 overflow-hidden">
-            {/* Fallback to text if logo.png is missing */}
-            <img src="/logo.png" alt="Osler Logo" className="w-12 h-12 object-contain" onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              e.currentTarget.parentElement!.innerHTML = '<span class="text-brand-blue font-bold text-xl">O</span>';
-            }} />
-          </div>
-          <h1 className="text-3xl font-bold text-white mb-1 tracking-tight">OSLER</h1>
+          <BrandLogo className="h-[60px] w-auto max-w-[200px] mb-4" />
+          <h1 className="text-3xl font-bold text-white mb-1 tracking-tight">OSLER NOTES</h1>
           <h2 className="text-brand-green font-medium text-sm tracking-[0.2em] mb-3">HEALTH SYSTEM</h2>
           <p className="text-gray-400 text-sm text-center">Portal Seguro para Profissionais de Saúde</p>
         </div>
@@ -152,7 +147,7 @@ export default function Login() {
         {/* Page Footer */}
         <div className="mt-8 text-center">
           <p className="text-[10px] text-gray-500 uppercase tracking-widest">
-            © {new Date().getFullYear()} OSLER HEALTH SYSTEM. TODOS OS DIREITOS RESERVADOS.
+            © {new Date().getFullYear()} OSLER NOTES. TODOS OS DIREITOS RESERVADOS.
           </p>
         </div>
       </div>

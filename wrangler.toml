@@ -1,0 +1,23 @@
+# Configuração para Cloudflare Pages
+# Este arquivo é usado pelo Cloudflare Pages para configurar o build e deploy.
+# IMPORTANTE: As variáveis VITE_* precisam ser configuradas no dashboard do Cloudflare
+# em: Pages > oslernotes > Settings > Environment variables
+
+name = "oslernotes"
+compatibility_date = "2024-09-23"
+pages_build_output_dir = "./dist"
+
+[env.production.vars]
+# NÃO coloque valores reais aqui - use o dashboard do Cloudflare
+# Configure as variáveis abaixo em:
+# Cloudflare Dashboard > Pages > oslernotes > Settings > Environment variables
+#
+# ATENÇÃO: VITE_SUPABASE_URL deve ser APENAS a URL base, SEM nenhum path.
+# O SDK do Supabase adiciona os paths internamente (/auth/v1, /rest/v1, etc).
+# URL ERRADA: "https://hfaigddhrvbqgsddxpad.supabase.co/rest/v1"  ← causa bug de autenticação
+# URL ERRADA: "https://hfaigddhrvbqgsddxpad.supabase.co/functions/v1"  ← causa bug de autenticação
+# URL CORRETA: "https://hfaigddhrvbqgsddxpad.supabase.co"  ← sem trailing path
+#
+# VITE_SUPABASE_URL = "https://hfaigddhrvbqgsddxpad.supabase.co"
+# VITE_SUPABASE_ANON_KEY = "<sua_anon_key>"  ← formato: sb_publishable_... ou JWT eyJ...
+# VITE_API_BASE_URL = "https://hfaigddhrvbqgsddxpad.supabase.co/functions/v1"

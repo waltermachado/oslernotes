@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Mail, ArrowLeft, Send } from 'lucide-react'
 
-import { apiFetch } from '../lib/apiFetch'
+import { supabase } from '../lib/supabase'
 
 function isValidEmail(email: string) {
   if (!email) return false
@@ -15,7 +15,6 @@ export default function ForgotPassword() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
-  const [debugLink, setDebugLink] = useState('')
 
   const normalizedEmail = useMemo(() => email.trim().toLowerCase(), [email])
 
@@ -23,7 +22,6 @@ export default function ForgotPassword() {
     e.preventDefault()
     setError('')
     setMessage('')
-    setDebugLink('')
 
     if (!isValidEmail(normalizedEmail)) {
       setError('Informe um e-mail válido.')
@@ -32,22 +30,21 @@ export default function ForgotPassword() {
 
     setSubmitting(true)
     try {
-      const res = await apiFetch('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: normalizedEmail }),
-      })
+      // Usa o Supabase Auth nativo para envio do e-mail de recuperação
+      // O link de redefinição aponta para /reset-password na URL atual do app
+      const redirectTo = `${window.location.origin}/reset-password`
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+        normalizedEmail,
+        { redirectTo }
+      )
 
-      const body = (await res.json().catch(() => ({}))) as any
-      if (!res.ok && body?.error) {
-        setError(String(body.error))
+      if (resetError) {
+        setError('Falha ao enviar o e-mail. Tente novamente.')
         return
       }
 
-      setMessage(String(body?.message ?? 'Se existir uma conta para este e-mail, você receberá um link em alguns minutos.'))
-      if (body?.debug_reset_url) {
-        setDebugLink(String(body.debug_reset_url))
-      }
+      // Sempre mostra mensagem genérica por segurança (não revela se o e-mail existe)
+      setMessage('Se existir uma conta para este e-mail, você receberá um link de recuperação em alguns minutos.')
     } catch {
       setError('Falha de conexão. Tente novamente.')
     } finally {
@@ -80,13 +77,6 @@ export default function ForgotPassword() {
           {message && (
             <div className="mb-4 bg-emerald-500/10 border border-emerald-500/50 text-emerald-300 text-sm p-3 rounded-lg">
               {message}
-            </div>
-          )}
-
-          {debugLink && (
-            <div className="mb-4 bg-white/5 border border-gray-800 text-gray-200 text-sm p-3 rounded-lg break-all">
-              <div className="text-xs text-gray-400 mb-1">Link de teste (dev)</div>
-              <a href={debugLink} className="text-brand-blue hover:text-blue-400">{debugLink}</a>
             </div>
           )}
 
