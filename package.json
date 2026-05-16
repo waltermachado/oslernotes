@@ -72,8 +72,5 @@
     "vite-plugin-trae-solo-badge": "^1.0.0",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^2.1.9"
-  },
-  "optionalDependencies": {
-    "@rollup/rollup-linux-arm64-gnu": "*"
   }
 }
