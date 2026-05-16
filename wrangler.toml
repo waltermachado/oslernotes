@@ -1,16 +1,16 @@
-# Configuração para Cloudflare Pages
-# Este arquivo é usado pelo Cloudflare Pages para configurar o build e deploy.
-# IMPORTANTE: As variáveis VITE_* precisam ser configuradas no dashboard do Cloudflare
-# em: Pages > oslernotes > Settings > Environment variables
+# Configuração para Cloudflare Workers (Assets + SPA)
 
 name = "oslernotes"
 compatibility_date = "2024-09-23"
-pages_build_output_dir = "./dist"
 
-[env.production.vars]
+[assets]
+directory = "./dist"
+not_found_handling = "single-page-application"
+
+[vars]
 # NÃO coloque valores reais aqui - use o dashboard do Cloudflare
 # Configure as variáveis abaixo em:
-# Cloudflare Dashboard > Pages > oslernotes > Settings > Environment variables
+# Cloudflare Dashboard > Workers & Pages > oslernotes > Settings > Variables
 #
 # ATENÇÃO: VITE_SUPABASE_URL deve ser APENAS a URL base, SEM nenhum path.
 # O SDK do Supabase adiciona os paths internamente (/auth/v1, /rest/v1, etc).
