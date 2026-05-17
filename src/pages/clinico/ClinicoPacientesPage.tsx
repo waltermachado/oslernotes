@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { supabase } from '../../lib/supabase'
 import { Plus, Search, Upload, X } from 'lucide-react'
 import { useFieldArray, useForm } from 'react-hook-form'
 
@@ -49,9 +50,8 @@ function maskCpf(v: string) {
 }
 
 export default function ClinicoPacientesPage() {
-  const { session, user } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
-  const token = session?.access_token
 
   const [query, setQuery] = useState('')
   const [items, setItems] = useState<PatientListItem[]>([])
@@ -93,17 +93,28 @@ export default function ClinicoPacientesPage() {
   useEffect(() => {
     let cancelled = false
     async function load() {
-      if (!token) return
       setLoading(true)
       setError(null)
       try {
-        const res = await fetch(`/api/patients?page=1&pageSize=50`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        const data = (await res.json()) as PatientsListResponse
-        const apiError = (data as unknown as { error?: string }).error
-        if (!res.ok) throw new Error(apiError || 'Falha ao carregar pacientes')
-        if (!cancelled) setItems(data.items)
+        const { data, error: qError } = await supabase
+          .from('pacientes')
+          .select('id, nome_completo, cpf, data_nascimento, sexo, foto_path, updated_at')
+          .order('updated_at', { ascending: false })
+          .limit(50)
+
+        if (qError) throw new Error(qError.message || 'Falha ao carregar pacientes')
+        if (!cancelled) {
+          const mapped: PatientListItem[] = (data ?? []).map((p: any) => ({
+            id: p.id,
+            nome_completo: p.nome_completo,
+            cpf: p.cpf ? String(p.cpf).replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : null,
+            data_nascimento: p.data_nascimento,
+            sexo: p.sexo,
+            foto_url: null,
+            updated_at: p.updated_at,
+          }))
+          setItems(mapped)
+        }
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : 'Erro ao carregar pacientes')
       } finally {
@@ -114,58 +125,82 @@ export default function ClinicoPacientesPage() {
     return () => {
       cancelled = true
     }
-  }, [token])
+  }, [])
 
   async function onCreate(values: CreatePatientForm) {
-    if (!token) return
     setSubmitting(true)
     setError(null)
 
     try {
-      const payload = {
-        ...values,
-        cpf: values.cpf ? values.cpf.replace(/\D/g, '') : undefined,
-        doencas: values.doencas.map((d) => d.value).filter(Boolean),
-        remedios: values.remedios.filter((r) => r.nome && r.dosagem && r.frequencia),
-      }
+      const cpf = values.cpf ? values.cpf.replace(/\D/g, '') : null
+      const doencas = values.doencas.map((d) => d.value).filter(Boolean)
+      const remedios = values.remedios.filter((r) => r.nome && r.dosagem && r.frequencia)
 
-      const res = await fetch('/api/patients', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      })
+      // Estimar data de nascimento a partir da idade (mesmo mês/dia atual, ano calculado)
+      const now = new Date()
+      const birthYear = now.getFullYear() - Math.max(0, values.idade)
+      const dataNascimento = new Date(birthYear, now.getMonth(), now.getDate()).toISOString().split('T')[0]
 
-      const body = await res.json()
-      if (!res.ok) {
-        throw new Error(body.error || 'Falha ao criar paciente')
-      }
-
-      const created = body.patient as PatientListItem
-
-      if (photoFile) {
-        const fd = new FormData()
-        fd.append('photo', photoFile)
-        const up = await fetch(`/api/patients/${created.id}/photo`, {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
-          body: fd,
+      const { data: created, error: insertError } = await supabase
+        .from('pacientes')
+        .insert({
+          nome_completo: values.nome_completo,
+          cpf: cpf || null,
+          data_nascimento: dataNascimento,
+          sexo: values.sexo,
+          sexualidade: values.sexualidade || null,
+          historico_breve_doencas: values.historico_breve_doencas,
+          queixa_principal: values.queixa_principal,
+          doencas,
+          remedios,
+          medicamentos_em_uso: remedios,
+          futuras_anotacoes: values.futuras_anotacoes || null,
+          telefone: values.telefone || 'N/A',
+          email: values.email || null,
+          endereco: {},
         })
-        const upBody = await up.json()
-        if (!up.ok) throw new Error(upBody.error || 'Falha ao enviar foto')
+        .select('id, nome_completo, cpf, data_nascimento, sexo, foto_path, updated_at')
+        .single()
+
+      if (insertError) {
+        const isDupCpf = (insertError as { code?: string }).code === '23505'
+        throw new Error(isDupCpf ? 'CPF já cadastrado para esta clínica' : insertError.message)
+      }
+
+      if (photoFile && created) {
+        const ext = photoFile.type === 'image/png' ? 'png' : 'jpg'
+        const objectPath = `${created.id}/${crypto.randomUUID()}.${ext}`
+        const { error: uploadError } = await supabase.storage
+          .from('patient-photos')
+          .upload(objectPath, photoFile, { contentType: photoFile.type, upsert: true })
+        if (!uploadError) {
+          await supabase.from('pacientes').update({ foto_path: objectPath }).eq('id', created.id)
+        }
       }
 
       setShowNew(false)
       setPhotoFile(null)
       form.reset()
 
-      const refresh = await fetch(`/api/patients?page=1&pageSize=50`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      const refreshData = (await refresh.json()) as PatientsListResponse
-      if (refresh.ok) setItems(refreshData.items)
+      // Recarrega a lista
+      const { data: refreshData } = await supabase
+        .from('pacientes')
+        .select('id, nome_completo, cpf, data_nascimento, sexo, foto_path, updated_at')
+        .order('updated_at', { ascending: false })
+        .limit(50)
+
+      if (refreshData) {
+        const mapped: PatientListItem[] = refreshData.map((p: any) => ({
+          id: p.id,
+          nome_completo: p.nome_completo,
+          cpf: p.cpf ? String(p.cpf).replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : null,
+          data_nascimento: p.data_nascimento,
+          sexo: p.sexo,
+          foto_url: null,
+          updated_at: p.updated_at,
+        }))
+        setItems(mapped)
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro ao criar paciente')
     } finally {
@@ -174,19 +209,17 @@ export default function ClinicoPacientesPage() {
   }
 
   async function enqueue(patientId: string) {
-    if (!token) return
     setError(null)
     try {
-      const res = await fetch('/api/queue', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ paciente_id: patientId, prioridade: 0 }),
-      })
-      const body = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(body.error || 'Falha ao adicionar à fila')
+      const { error: insertError } = await supabase
+        .from('atendimentos')
+        .insert({
+          paciente_id: patientId,
+          status: 'aguardando',
+          prioridade: 0,
+          order_index: 0,
+        })
+      if (insertError) throw new Error(insertError.message || 'Falha ao adicionar à fila')
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro ao adicionar à fila')
     }

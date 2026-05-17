@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Check, PhoneCall, RefreshCcw } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import { supabase } from '../../lib/supabase'
 
 type FilaItem = {
   id: string
@@ -30,8 +31,7 @@ function calcAge(dateIso: string) {
 }
 
 export default function ClinicoFilaPage() {
-  const { session, user } = useAuth()
-  const token = session?.access_token
+  const { user } = useAuth()
   const role = user?.papel
   const navigate = useNavigate()
   const location = useLocation()
@@ -44,46 +44,60 @@ export default function ClinicoFilaPage() {
   const mine = role === 'medico'
 
   const load = useCallback(async () => {
-    if (!token) return
+    if (!user) return
     setLoading(true)
     setError(null)
     try {
-      const url = new URL('/api/queue', window.location.origin)
-      url.searchParams.set('status', status)
-      if (mine) url.searchParams.set('mine', '1')
+      let q = supabase
+        .from('atendimentos')
+        .select('id, paciente_id, medico_id, status, prioridade, created_at, pacientes:pacientes(id,nome_completo,cpf,data_nascimento,sexo,foto_path)')
+        .eq('status', status)
+        .order('prioridade', { ascending: false })
+        .order('created_at', { ascending: true })
 
-      const res = await fetch(url.pathname + url.search, { headers: { Authorization: `Bearer ${token}` } })
-      const body = await res.json()
-      if (!res.ok) throw new Error(body.error || 'Falha ao carregar fila')
-      setItems(body.items ?? [])
+      if (mine && user.id) {
+        q = q.eq('medico_id', user.id)
+      }
+
+      const { data, error: qError } = await q
+      if (qError) throw new Error(qError.message || 'Falha ao carregar fila')
+      setItems((data ?? []) as unknown as FilaItem[])
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro ao carregar fila')
     } finally {
       setLoading(false)
     }
-  }, [mine, status, token])
+  }, [mine, status, user])
 
   useEffect(() => {
     load()
   }, [load])
 
   async function accept(id: string) {
-    if (!token) return
-    const res = await fetch(`/api/queue/${id}/accept`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
-    const body = await res.json().catch(() => ({}))
-    if (!res.ok) {
-      setError(body.error || 'Falha ao aceitar')
+    if (!user) return
+    const { error: acceptError } = await supabase
+      .from('atendimentos')
+      .update({ medico_id: user.id })
+      .eq('id', id)
+      .eq('status', 'aguardando')
+      .is('medico_id', null)
+    if (acceptError) {
+      setError(acceptError.message || 'Falha ao aceitar')
       return
     }
     await load()
   }
 
   async function call(id: string, patientId: string) {
-    if (!token) return
-    const res = await fetch(`/api/queue/${id}/call`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
-    const body = await res.json().catch(() => ({}))
-    if (!res.ok) {
-      setError(body.error || 'Falha ao chamar')
+    if (!user) return
+    const { error: callError } = await supabase
+      .from('atendimentos')
+      .update({ status: 'em_atendimento', data_hora_inicio: new Date().toISOString() })
+      .eq('id', id)
+      .eq('medico_id', user.id)
+      .in('status', ['aguardando', 'em_atendimento'])
+    if (callError) {
+      setError(callError.message || 'Falha ao chamar')
       return
     }
     const base = location.pathname.startsWith('/medico') ? '/medico' : '/clinico'

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { useAuth } from '../../context/AuthContext'
-import { apiFetch } from '../../lib/apiFetch'
+import { supabase } from '../../lib/supabase'
 
 type NotificationRow = {
   id: string
@@ -16,8 +15,6 @@ type NotificationRow = {
 }
 
 export default function BackofficeNotificacoesPage() {
-  const { session } = useAuth()
-  const token = session?.access_token
 
   const [items, setItems] = useState<NotificationRow[]>([])
   const [loading, setLoading] = useState(true)
@@ -30,14 +27,16 @@ export default function BackofficeNotificacoesPage() {
   const [creating, setCreating] = useState(false)
 
   async function load() {
-    if (!token) return
     setLoading(true)
     setError('')
     try {
-      const res = await apiFetch('/api/admin/notifications', { headers: { Authorization: `Bearer ${token}` } })
-      const body = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(body.error || 'Falha ao carregar notificações')
-      setItems(body.notifications ?? [])
+      const { data, error: qError } = await supabase
+        .from('super_admin_notifications')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(100)
+      if (qError) throw new Error(qError.message || 'Falha ao carregar notificações')
+      setItems((data ?? []) as NotificationRow[])
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro ao carregar')
     } finally {
@@ -48,27 +47,28 @@ export default function BackofficeNotificacoesPage() {
   useEffect(() => {
     void load()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token])
+  }, [])
 
   async function create(status: 'draft' | 'published') {
-    if (!token) return
     setCreating(true)
     setError('')
     try {
-      const res = await apiFetch('/api/admin/notifications', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({
+      const trimTitle = title.trim()
+      const trimMessage = message.trim()
+      if (!trimTitle || !trimMessage) throw new Error('Título e mensagem são obrigatórios')
+
+      const { error: insertError } = await supabase
+        .from('super_admin_notifications')
+        .insert({
           scope_type: scopeType,
           scope_clinica_id: scopeType === 'single_clinic' ? scopeClinicId.trim() : null,
           kind: 'manual',
-          title: title.trim(),
-          message: message.trim(),
+          title: trimTitle,
+          message: trimMessage,
           status,
-        }),
-      })
-      const body = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(body.error || 'Falha ao criar notificação')
+          published_at: status === 'published' ? new Date().toISOString() : null,
+        })
+      if (insertError) throw new Error(insertError.message || 'Falha ao criar notificação')
       setTitle('')
       setMessage('')
       setScopeClinicId('')

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { X, Building, User, Mail, Phone, MapPin, Clock } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase';
 
 interface AddClinicModalProps {
   isOpen: boolean;
@@ -29,7 +29,6 @@ export default function AddClinicModal({ isOpen, onClose, onSuccess }: AddClinic
   const { register, handleSubmit, reset, setValue } = useForm<ClinicFormData>();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const { session } = useAuth();
 
   if (!isOpen) return null;
 
@@ -75,19 +74,38 @@ export default function AddClinicModal({ isOpen, onClose, onSuccess }: AddClinic
     };
 
     try {
-      const response = await fetch('/api/admin/clinics', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token}`
-        },
-        body: JSON.stringify(payload),
-      });
+      const cleanCnpj = String(payload.cnpj).replace(/\D/g, '')
+      if (cleanCnpj.length !== 14) {
+        throw new Error('CNPJ inválido')
+      }
 
-      const result = await response.json();
+      // Verifica se CNPJ já existe
+      const { data: existing } = await supabase
+        .from('clinicas')
+        .select('id')
+        .eq('cnpj', cleanCnpj)
+        .maybeSingle()
 
-      if (!response.ok) {
-        throw new Error(result.error || 'Erro ao criar clínica');
+      if (existing) {
+        throw new Error('Já existe uma clínica com este CNPJ')
+      }
+
+      const { error: insertError } = await supabase
+        .from('clinicas')
+        .insert({
+          nome: payload.nome,
+          cnpj: cleanCnpj,
+          telefone: payload.telefone,
+          email: payload.email,
+          nome_responsavel: payload.nome_responsavel,
+          especialidade_principal: payload.especialidade_principal,
+          horario_funcionamento: payload.horario_funcionamento,
+          endereco: payload.endereco,
+        })
+
+      if (insertError) {
+        const isDup = (insertError as { code?: string }).code === '23505'
+        throw new Error(isDup ? 'Já existe uma clínica com este CNPJ' : insertError.message)
       }
 
       reset();

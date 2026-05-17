@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
-import { useAuth } from '../../context/AuthContext'
+import { supabase } from '../../lib/supabase'
 import { cn } from '../../lib/utils'
 
 type Plan = {
@@ -13,8 +13,6 @@ type Plan = {
 }
 
 export default function BackofficePlanosPage() {
-  const { session } = useAuth()
-  const token = session?.access_token
 
   const [plans, setPlans] = useState<Plan[]>([])
   const [loading, setLoading] = useState(true)
@@ -27,14 +25,15 @@ export default function BackofficePlanosPage() {
   }, [])
 
   async function load() {
-    if (!token) return
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('/api/admin/plans', { headers: { Authorization: `Bearer ${token}` } })
-      const body = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(body.error || 'Falha ao carregar planos')
-      setPlans(body.plans ?? [])
+      const { data, error: qError } = await supabase
+        .from('subscription_plan_catalog')
+        .select('tier, monthly_price_cents, max_concurrent_total, max_concurrent_admin, max_concurrent_atendente, max_concurrent_medico')
+        .order('monthly_price_cents', { ascending: true })
+      if (qError) throw new Error(qError.message || 'Falha ao carregar planos')
+      setPlans((data ?? []) as Plan[])
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro ao carregar')
     } finally {
@@ -45,20 +44,25 @@ export default function BackofficePlanosPage() {
   useEffect(() => {
     void load()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token])
+  }, [])
 
   async function save() {
-    if (!editing || !token) return
+    if (!editing) return
     setSaving(true)
     setError('')
     try {
-      const res = await fetch(`/api/admin/plans/${editing.tier}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify(editing),
-      })
-      const body = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(body.error || 'Falha ao salvar')
+      const { error: updateError } = await supabase
+        .from('subscription_plan_catalog')
+        .update({
+          monthly_price_cents: editing.monthly_price_cents,
+          max_concurrent_total: editing.max_concurrent_total,
+          max_concurrent_admin: editing.max_concurrent_admin,
+          max_concurrent_atendente: editing.max_concurrent_atendente,
+          max_concurrent_medico: editing.max_concurrent_medico,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('tier', editing.tier)
+      if (updateError) throw new Error(updateError.message || 'Falha ao salvar')
       setEditing(null)
       await load()
     } catch (e) {

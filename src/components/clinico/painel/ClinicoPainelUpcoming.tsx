@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 import { cn } from '../../../lib/utils'
 import { useAuth } from '../../../context/AuthContext'
+import { supabase } from '../../../lib/supabase'
 
 type BadgeStatus = 'PRESENTE' | 'AGENDADO' | 'ATRASADO'
 
@@ -41,50 +42,72 @@ export default function ClinicoPainelUpcoming() {
   const basePath = isMedico ? '/medico' : '/clinico'
 
   const load = useCallback(async () => {
-    if (!token) return
+    if (!user) return
     setLoading(true)
     setError('')
     try {
-      const url = new URL('/api/queue', window.location.origin)
-      url.searchParams.set('status', 'aguardando,agendado')
-      if (isMedico) {
-        url.searchParams.set('mine', '1')
+      let q = supabase
+        .from('atendimentos')
+        .select('id, paciente_id, medico_id, status, prioridade, scheduled_time, order_index, data_hora_inicio, data_hora_fim, created_at, pacientes:pacientes(id,nome_completo,cpf,sexo,data_nascimento,foto_path)')
+        .in('status', ['aguardando', 'agendado'])
+        .order('order_index', { ascending: true })
+        .order('scheduled_time', { ascending: true, nullsFirst: true })
+        .order('prioridade', { ascending: false })
+        .order('created_at', { ascending: true })
+        .limit(5)
+
+      if (isMedico && user.id) {
+        q = q.eq('medico_id', user.id)
       }
 
-      const res = await fetch(url.pathname + url.search, { headers: { Authorization: `Bearer ${token}` } })
-      const body = await res.json()
-      if (!res.ok) throw new Error(body.error || 'Falha ao carregar próximos pacientes')
+      const { data, error } = await q
+      if (error) throw new Error(error.message || 'Falha ao carregar próximos pacientes')
 
-      let fetchedItems = body.items ?? []
-
-      fetchedItems = fetchedItems.slice(0, 5)
-
-      setItems(fetchedItems)
+      setItems((data ?? []) as unknown as QueueItem[])
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro ao carregar')
     } finally {
       setLoading(false)
     }
-  }, [token, isMedico])
+  }, [user, isMedico])
 
   useEffect(() => {
     load()
   }, [load])
 
   async function handleCall(item: QueueItem) {
-    if (!token) return
+    if (!user) return
 
-    if (item.status === 'aguardando' && item.medico_id === null && isMedico) {
-      await fetch(`/api/queue/${item.id}/accept`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
-    }
+    try {
+      if (item.status === 'aguardando' && item.medico_id === null && isMedico) {
+        const { error: acceptError } = await supabase
+          .from('atendimentos')
+          .update({ medico_id: user.id })
+          .eq('id', item.id)
+          .eq('status', 'aguardando')
+          .is('medico_id', null)
+        if (acceptError) {
+          setError(acceptError.message || 'Falha ao aceitar paciente')
+          return
+        }
+      }
 
-    const res = await fetch(`/api/queue/${item.id}/call`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
-    const body = await res.json().catch(() => ({}))
-    if (!res.ok) {
-      setError(body.error || 'Falha ao chamar paciente')
-      return
+      const { error: callError } = await supabase
+        .from('atendimentos')
+        .update({ status: 'em_atendimento', data_hora_inicio: new Date().toISOString() })
+        .eq('id', item.id)
+        .eq('medico_id', user.id)
+        .in('status', ['aguardando', 'em_atendimento'])
+
+      if (callError) {
+        setError(callError.message || 'Falha ao chamar paciente')
+        return
+      }
+
+      navigate(`${basePath}/prontuarios/${item.paciente_id}`)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Erro ao chamar paciente')
     }
-    navigate(`${basePath}/prontuarios/${item.paciente_id}`)
   }
 
   return (

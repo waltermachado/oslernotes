@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase';
 import { Plus, Search, Building2, LogOut } from 'lucide-react';
 import AddClinicModal from '../components/AddClinicModal';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +17,7 @@ interface Clinic {
 }
 
 export default function Backoffice() {
-  const { session, user, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,18 +27,13 @@ export default function Backoffice() {
   const fetchClinics = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/admin/clinics', {
-        headers: {
-          'Authorization': `Bearer ${session?.access_token}`
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error('Falha ao buscar clínicas');
-      }
-      
-      const data = await response.json();
-      setClinics(data);
+      const { data, error: qError } = await supabase
+        .from('clinicas')
+        .select('id, nome, cnpj, nome_responsavel, email, ativa, created_at')
+        .order('created_at', { ascending: false });
+
+      if (qError) throw new Error(qError.message || 'Falha ao buscar clínicas');
+      setClinics(data ?? []);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -52,7 +48,7 @@ export default function Backoffice() {
   useEffect(() => {
     fetchClinics();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
+  }, []);
 
   const handleLogout = async () => {
     await signOut();

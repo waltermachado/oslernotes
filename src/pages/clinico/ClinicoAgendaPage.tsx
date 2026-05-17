@@ -4,8 +4,7 @@ import type { ReactNode } from 'react'
 
 import AgendaDayView from '../../components/clinico/AgendaDayView'
 import type { Appointment, AppointmentStatus } from '../../components/clinico/AppointmentCard'
-import { useAuth } from '../../context/AuthContext'
-import { apiFetch } from '../../lib/apiFetch'
+import { supabase } from '../../lib/supabase'
 import { cn } from '../../lib/utils'
 
 type ViewMode = 'day' | 'week' | 'month'
@@ -45,8 +44,6 @@ function isSameDay(a: Date, b: Date) {
 }
 
 export default function ClinicoAgendaPage() {
-  const { session } = useAuth()
-  const token = session?.access_token
 
   const [mode, setMode] = useState<ViewMode>('day')
   const [date, setDate] = useState(() => new Date())
@@ -63,22 +60,24 @@ export default function ClinicoAgendaPage() {
   }, [])
 
   const load = useCallback(async () => {
-    if (!token) return
     setLoading(true)
     setError(null)
     try {
-      const res = await apiFetch('/api/queue?status=agendado,aguardando,em_atendimento', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      const body = await res.json() as { items?: QueueItem[]; error?: string }
-      if (!res.ok) throw new Error(body.error || 'Falha ao carregar agenda')
-      setItems(body.items ?? [])
+      const { data, error: qError } = await supabase
+        .from('atendimentos')
+        .select('id, paciente_id, status, prioridade, scheduled_time, pacientes:pacientes(id,nome_completo)')
+        .in('status', ['agendado', 'aguardando', 'em_atendimento'])
+        .not('scheduled_time', 'is', null)
+        .order('scheduled_time', { ascending: true })
+
+      if (qError) throw new Error(qError.message || 'Falha ao carregar agenda')
+      setItems((data ?? []) as unknown as QueueItem[])
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro ao carregar agenda')
     } finally {
       setLoading(false)
     }
-  }, [token])
+  }, [])
 
   useEffect(() => { load() }, [load])
 
