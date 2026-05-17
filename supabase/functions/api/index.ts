@@ -1,6 +1,6 @@
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts'
 import { corsResponse } from '../_shared/cors.ts'
-import { adminClient, requireClinicoAuth, requireRole } from '../_shared/auth.ts'
+import { adminClient, requireClinicoAuth, requireRole, requireSuperAdminAuth } from '../_shared/auth.ts'
 
 function json(req: Request, status: number, payload: unknown) {
   return corsResponse(req, JSON.stringify(payload), {
@@ -26,6 +26,24 @@ async function signedPhotoUrl(admin: ReturnType<typeof adminClient>, path: strin
 
 async function writeAuditLog(admin: ReturnType<typeof adminClient>, params: Record<string, unknown>) {
   await admin.from('audit_logs').insert(params)
+}
+
+function normalizePlanTier(value: unknown) {
+  if (value === 'bronze') return 'bronze'
+  if (value === 'prata' || value === 'silver') return 'prata'
+  if (value === 'ouro' || value === 'gold' || value === 'platinum') return 'ouro'
+  return 'bronze'
+}
+
+function computeRoleCounts(rows: Array<{ papel: string }>) {
+  const counts = { total: 0, admin: 0, medico: 0, atendente: 0 }
+  for (const r of rows) {
+    counts.total += 1
+    if (r.papel === 'admin') counts.admin += 1
+    if (r.papel === 'medico') counts.medico += 1
+    if (r.papel === 'atendente') counts.atendente += 1
+  }
+  return counts
 }
 
 function stripFunctionPrefix(pathname: string) {
@@ -387,6 +405,251 @@ serve(async (req: Request) => {
 
         return json(req, 200, { atendimento: updated })
       }
+    }
+
+    return json(req, 404, { error: 'Not found' })
+  }
+
+  if (path.startsWith('/admin')) {
+    const auth = await requireSuperAdminAuth(req)
+    if (!auth.ok) return json(req, auth.status, { error: auth.error })
+
+    const parts = path.split('/').filter(Boolean)
+
+    if (parts.length === 2 && parts[1] === 'clinics' && req.method === 'GET') {
+      const search = String(url.searchParams.get('q') ?? '').trim()
+      const status = String(url.searchParams.get('status') ?? '').trim()
+      const plan = String(url.searchParams.get('plan') ?? '').trim()
+
+      let q = admin
+        .from('clinicas')
+        .select('id,nome,cnpj,email,telefone,nome_responsavel,plano_assinatura,ativa,created_at,updated_at')
+        .order('created_at', { ascending: false })
+
+      if (search) q = q.ilike('nome', `%${search}%`)
+      if (status === 'ativa') q = q.eq('ativa', true)
+      if (status === 'inativa') q = q.eq('ativa', false)
+      if (plan) q = q.eq('plano_assinatura', plan)
+
+      const { data, error } = await q
+      if (error) return json(req, 500, { error: error.message })
+
+      const clinics = data ?? []
+      const clinicIds = clinics.map((c: any) => c.id)
+
+      const { data: planCatalog } = await admin
+        .from('subscription_plan_catalog')
+        .select('tier,monthly_price_cents,max_concurrent_total,max_concurrent_admin,max_concurrent_atendente,max_concurrent_medico')
+
+      const planMap = new Map<string, any>()
+      for (const p of planCatalog ?? []) planMap.set(String((p as any).tier), p)
+
+      const { data: users } = clinicIds.length
+        ? await admin.from('usuarios').select('clinica_id,papel,ativo').in('clinica_id', clinicIds)
+        : { data: [] as any[] }
+
+      const sinceIso = new Date(Date.now() - 10 * 60 * 1000).toISOString()
+      const { data: sessions } = clinicIds.length
+        ? await admin
+            .from('clinica_sessions')
+            .select('clinica_id,papel,last_seen')
+            .in('clinica_id', clinicIds)
+            .gte('last_seen', sinceIso)
+        : { data: [] as any[] }
+
+      const userAgg = new Map<string, { total: number; admin: number; medico: number; atendente: number }>()
+      for (const u of users ?? []) {
+        const k = String((u as any).clinica_id)
+        const cur = userAgg.get(k) ?? { total: 0, admin: 0, medico: 0, atendente: 0 }
+        cur.total += 1
+        if ((u as any).papel === 'admin') cur.admin += 1
+        if ((u as any).papel === 'medico') cur.medico += 1
+        if ((u as any).papel === 'atendente') cur.atendente += 1
+        userAgg.set(k, cur)
+      }
+
+      const sessionAgg = new Map<string, { total: number; admin: number; medico: number; atendente: number }>()
+      for (const s of sessions ?? []) {
+        const k = String((s as any).clinica_id)
+        const cur = sessionAgg.get(k) ?? { total: 0, admin: 0, medico: 0, atendente: 0 }
+        cur.total += 1
+        if ((s as any).papel === 'admin') cur.admin += 1
+        if ((s as any).papel === 'medico') cur.medico += 1
+        if ((s as any).papel === 'atendente') cur.atendente += 1
+        sessionAgg.set(k, cur)
+      }
+
+      const enriched = clinics.map((c: any) => {
+        const tier = normalizePlanTier(c.plano_assinatura)
+        const limits = planMap.get(tier) ?? null
+        return {
+          ...c,
+          plan_tier: tier,
+          limits,
+          users: userAgg.get(String(c.id)) ?? { total: 0, admin: 0, medico: 0, atendente: 0 },
+          active_sessions: sessionAgg.get(String(c.id)) ?? { total: 0, admin: 0, medico: 0, atendente: 0 },
+        }
+      })
+
+      return json(req, 200, enriched)
+    }
+
+    if (parts.length === 3 && parts[1] === 'clinics' && req.method === 'GET') {
+      const clinicId = String(parts[2])
+
+      const { data: clinic, error: clinicError } = await admin.from('clinicas').select('*').eq('id', clinicId).maybeSingle()
+      if (clinicError || !clinic) return json(req, 404, { error: 'Clínica não encontrada' })
+
+      const tier = normalizePlanTier((clinic as any).plano_assinatura)
+      const { data: planRow } = await admin
+        .from('subscription_plan_catalog')
+        .select('tier,monthly_price_cents,max_concurrent_total,max_concurrent_admin,max_concurrent_atendente,max_concurrent_medico')
+        .eq('tier', tier)
+        .maybeSingle()
+
+      const { data: users } = await admin
+        .from('usuarios')
+        .select('id,nome,email,papel,ativo,created_at')
+        .eq('clinica_id', clinicId)
+        .order('created_at', { ascending: true })
+
+      const { data: subscription } = await admin
+        .from('subscriptions')
+        .select('*')
+        .eq('clinica_id', clinicId)
+        .order('current_period_end', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      const { data: invoices } = (subscription as any)?.id
+        ? await admin
+            .from('subscription_invoices')
+            .select('*')
+            .eq('subscription_id', (subscription as any).id)
+            .order('created_at', { ascending: false })
+            .limit(50)
+        : { data: [] as any[] }
+
+      const { data: audit } = await admin
+        .from('audit_logs')
+        .select('*')
+        .eq('clinica_id', clinicId)
+        .order('created_at', { ascending: false })
+        .limit(50)
+
+      const sinceIso = new Date(Date.now() - 10 * 60 * 1000).toISOString()
+      const { data: sessions } = await admin
+        .from('clinica_sessions')
+        .select('papel,last_seen')
+        .eq('clinica_id', clinicId)
+        .gte('last_seen', sinceIso)
+
+      const sessionCounts = computeRoleCounts(sessions ?? [])
+
+      return json(req, 200, {
+        clinic,
+        plan: planRow ?? null,
+        users: users ?? [],
+        subscription: subscription ?? null,
+        invoices: invoices ?? [],
+        audit_logs: audit ?? [],
+        active_sessions: sessionCounts,
+      })
+    }
+
+    if (parts.length === 4 && parts[1] === 'clinics' && parts[3] === 'assign-plan' && req.method === 'POST') {
+      const clinicId = String(parts[2])
+      const body = (await readJson(req)) as any
+      const tier = String(body?.tier ?? '')
+      if (tier !== 'bronze' && tier !== 'prata' && tier !== 'ouro') return json(req, 400, { error: 'tier inválido' })
+
+      const { data: clinic, error: findErr } = await admin.from('clinicas').select('id,plano_assinatura').eq('id', clinicId).maybeSingle()
+      if (findErr || !clinic) return json(req, 404, { error: 'Clínica não encontrada' })
+
+      const previous = (clinic as any).plano_assinatura
+      const { data: updated, error } = await admin
+        .from('clinicas')
+        .update({ plano_assinatura: tier, updated_at: new Date().toISOString() })
+        .eq('id', clinicId)
+        .select('*')
+        .single()
+      if (error) return json(req, 400, { error: error.message })
+
+      await writeAuditLog(admin, {
+        clinica_id: clinicId,
+        actor_user_id: auth.userId,
+        entity_type: 'clinica',
+        entity_id: clinicId,
+        action: 'clinic.plan.assign',
+        metadata: { from: previous, to: tier },
+      })
+
+      return json(req, 200, { clinic: updated })
+    }
+
+    if (parts.length === 4 && parts[1] === 'clinics' && parts[3] === 'send-credentials' && req.method === 'POST') {
+      const clinicId = String(parts[2])
+      const body = (await readJson(req)) as any
+      const email = String(body?.email ?? '').trim()
+      const role = String(body?.role ?? 'admin')
+      const fullName = String(body?.full_name ?? '').trim()
+      if (!email) return json(req, 400, { error: 'email é obrigatório' })
+      if (role !== 'admin' && role !== 'medico' && role !== 'atendente') return json(req, 400, { error: 'role inválida' })
+
+      const { data: clinic } = await admin.from('clinicas').select('id,nome').eq('id', clinicId).maybeSingle()
+      if (!clinic) return json(req, 404, { error: 'Clínica não encontrada' })
+
+      const created = await (admin as any).auth.admin.inviteUserByEmail(email, {
+        data: { role, full_name: fullName || email, clinica_id: clinicId },
+      })
+      if ((created as any).error) return json(req, 400, { error: (created as any).error.message })
+
+      await admin.from('usuarios').upsert(
+        {
+          id: (created as any).data.user.id,
+          clinica_id: clinicId,
+          nome: fullName || email,
+          email,
+          papel: role,
+          ativo: true,
+          senha_hash: 'auth_managed',
+        },
+        { onConflict: 'id' },
+      )
+
+      await writeAuditLog(admin, {
+        clinica_id: clinicId,
+        actor_user_id: auth.userId,
+        entity_type: 'usuario',
+        entity_id: (created as any).data.user.id,
+        action: 'credentials.send',
+        metadata: { email, role, user_id: (created as any).data.user.id },
+      })
+
+      return json(req, 200, { ok: true, user_id: (created as any).data.user.id })
+    }
+
+    if (parts.length === 2 && parts[1] === 'audit-logs' && req.method === 'GET') {
+      const clinicId = String(url.searchParams.get('clinica_id') ?? '').trim()
+      const action = String(url.searchParams.get('action') ?? '').trim()
+      const from = String(url.searchParams.get('from') ?? '').trim()
+      const to = String(url.searchParams.get('to') ?? '').trim()
+      const limit = Math.min(200, Math.max(1, Number(url.searchParams.get('limit') ?? 50)))
+
+      let q = admin
+        .from('audit_logs')
+        .select('id,clinica_id,actor_user_id,entity_type,entity_id,action,metadata,created_at')
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+      if (clinicId) q = q.eq('clinica_id', clinicId)
+      if (action) q = q.eq('action', action)
+      if (from) q = q.gte('created_at', from)
+      if (to) q = q.lte('created_at', to)
+
+      const { data, error } = await q
+      if (error) return json(req, 500, { error: error.message })
+      return json(req, 200, { logs: data ?? [] })
     }
 
     return json(req, 404, { error: 'Not found' })

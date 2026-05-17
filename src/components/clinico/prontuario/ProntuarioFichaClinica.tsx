@@ -2,6 +2,7 @@ import { ShieldAlert, Save, Pencil, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
 import type { PatientRecordFull, PatientRecordLimited } from './prontuarioTypes'
+import { apiFetch } from '../../../lib/apiFetch'
 
 export default function ProntuarioFichaClinica(props: {
   visibility: 'limited' | 'full'
@@ -48,7 +49,7 @@ export default function ProntuarioFichaClinica(props: {
         })
         .filter((r) => r.nome && r.dosagem && r.frequencia)
 
-      const res = await fetch(`/api/patients/${props.patientId}`, {
+      const res = await apiFetch(`/api/patients/${props.patientId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 
 import { useAuth } from '../../context/AuthContext'
+import { apiFetch } from '../../lib/apiFetch'
 
 type PatientListItem = {
   id: string
@@ -34,7 +35,7 @@ export default function ClinicoProntuariosPage() {
       setLoading(true)
       setError(null)
       try {
-        const res = await fetch(`/api/patients?page=1&pageSize=50`, {
+        const res = await apiFetch(`/api/patients?page=1&pageSize=50`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         const data = (await res.json()) as PatientsListResponse & { error?: string }
@@ -109,4 +110,3 @@ export default function ClinicoProntuariosPage() {
     </div>
   )
 }
-

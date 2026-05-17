@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useAuth } from '../../context/AuthContext'
+import { apiFetch } from '../../lib/apiFetch'
 import { allowedProntuarioTabs, type ProntuarioTabKey, prontuarioVisibilityLevel } from '../../utils/prontuarioAccess'
 import ProntuarioPatientHeader from '../../components/clinico/prontuario/ProntuarioPatientHeader'
 import ProntuarioTabs from '../../components/clinico/prontuario/ProntuarioTabs'
@@ -34,7 +35,7 @@ export default function ClinicoProntuarioPacientePage() {
       setLoading(true)
       setError(null)
       try {
-        const res = await fetch(`/api/patients/${patientId}/record`, {
+        const res = await apiFetch(`/api/patients/${patientId}/record`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         const body = (await res.json()) as RecordResponse & { error?: string }

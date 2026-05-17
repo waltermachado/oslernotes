@@ -7,6 +7,7 @@ import ClinicDetailHeader from '../../components/backoffice/ClinicDetailHeader'
 import ClinicDetailPaymentsTable from '../../components/backoffice/ClinicDetailPaymentsTable'
 import ClinicDetailSummaryCards, { type ClinicDetailPlan } from '../../components/backoffice/ClinicDetailSummaryCards'
 import ClinicDetailUsersTable from '../../components/backoffice/ClinicDetailUsersTable'
+import { apiFetch } from '../../lib/apiFetch'
 
 type Clinic = {
   id: string
@@ -80,7 +81,7 @@ export default function BackofficeClinicaDetalhePage() {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch(`/api/admin/clinics/${clinicId}`, { headers: { Authorization: `Bearer ${token}` } })
+      const res = await apiFetch(`/api/admin/clinics/${clinicId}`, { headers: { Authorization: `Bearer ${token}` } })
       const body = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(body.error || 'Falha ao carregar clínica')
       setClinic(body.clinic)
@@ -105,7 +106,7 @@ export default function BackofficeClinicaDetalhePage() {
 
   async function assignPlan() {
     if (!clinicId || !token) return
-    const res = await fetch(`/api/admin/clinics/${clinicId}/assign-plan`, {
+    const res = await apiFetch(`/api/admin/clinics/${clinicId}/assign-plan`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({ tier: assignTier }),
@@ -164,7 +165,7 @@ export default function BackofficeClinicaDetalhePage() {
         onAssignPlan={() => void assignPlan()}
         onSendCredentials={async ({ email, role, full_name }) => {
           if (!clinicId || !token) throw new Error('Sem sessão')
-          const res = await fetch(`/api/admin/clinics/${clinicId}/send-credentials`, {
+          const res = await apiFetch(`/api/admin/clinics/${clinicId}/send-credentials`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
             body: JSON.stringify({ email, role, full_name }),

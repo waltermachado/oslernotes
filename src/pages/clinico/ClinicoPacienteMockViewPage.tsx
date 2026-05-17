@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { apiFetch } from '../../lib/apiFetch'
 
 type Patient = {
   id: string
@@ -42,7 +43,7 @@ export default function ClinicoPacienteMockViewPage() {
       setLoading(true)
       setError(null)
       try {
-        const res = await fetch(`/api/patients/${patientId}`, {
+        const res = await apiFetch(`/api/patients/${patientId}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         const body = await res.json()

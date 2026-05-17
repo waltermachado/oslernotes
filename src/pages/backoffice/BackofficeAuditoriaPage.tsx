@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { useAuth } from '../../context/AuthContext'
+import { apiFetch } from '../../lib/apiFetch'
 
 type AuditRow = {
   id: string
@@ -28,11 +29,12 @@ export default function BackofficeAuditoriaPage() {
     setLoading(true)
     setError('')
     try {
-      const url = new URL('/api/admin/audit-logs', window.location.origin)
-      if (clinicId.trim()) url.searchParams.set('clinica_id', clinicId.trim())
-      if (action.trim()) url.searchParams.set('action', action.trim())
+      const params = new URLSearchParams()
+      if (clinicId.trim()) params.set('clinica_id', clinicId.trim())
+      if (action.trim()) params.set('action', action.trim())
+      const path = params.toString() ? `/api/admin/audit-logs?${params.toString()}` : '/api/admin/audit-logs'
 
-      const res = await fetch(url.pathname + url.search, { headers: { Authorization: `Bearer ${token}` } })
+      const res = await apiFetch(path, { headers: { Authorization: `Bearer ${token}` } })
       const body = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(body.error || 'Falha ao carregar auditoria')
       setLogs(body.logs ?? [])
@@ -115,4 +117,3 @@ export default function BackofficeAuditoriaPage() {
     </div>
   )
 }
-

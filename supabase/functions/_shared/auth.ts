@@ -29,6 +29,19 @@ export function authedClient(req: Request) {
   })
 }
 
+export async function requireSuperAdminAuth(req: Request) {
+  const sb = authedClient(req)
+  const { data, error } = await sb.auth.getUser()
+  if (error || !data?.user) return { ok: false as const, status: 401, error: 'Unauthorized' }
+
+  const userId = data.user.id
+  const admin = adminClient()
+  const { data: row, error: rowErr } = await admin.from('usuarios').select('papel').eq('id', userId).maybeSingle()
+  if (rowErr || row?.papel !== 'super_admin') return { ok: false as const, status: 403, error: 'Forbidden' }
+
+  return { ok: true as const, userId }
+}
+
 export async function requireClinicoAuth(req: Request) {
   const sb = authedClient(req)
   const { data, error } = await sb.auth.getUser()

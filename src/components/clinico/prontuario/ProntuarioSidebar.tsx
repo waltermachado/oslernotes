@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { PatientRecordLimited, PatientRecordFull } from './prontuarioTypes'
 import { asRemedios, asStringArray } from './prontuarioFormat'
+import { apiFetch } from '../../../lib/apiFetch'
 
 export default function ProntuarioSidebar(props: {
   patient: PatientRecordLimited | PatientRecordFull
@@ -49,7 +50,7 @@ export default function ProntuarioSidebar(props: {
       if (!props.token || !props.patientId) return
       if (props.role === 'atendente') return
       try {
-        const res = await fetch(`/api/patients/${props.patientId}/audit`, {
+        const res = await apiFetch(`/api/patients/${props.patientId}/audit`, {
           headers: { Authorization: `Bearer ${props.token}` },
         })
         const body = await res.json()

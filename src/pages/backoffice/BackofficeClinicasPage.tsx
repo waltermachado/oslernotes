@@ -4,6 +4,7 @@ import { Building2, Plus, Search } from 'lucide-react'
 
 import AddClinicModal from '../../components/AddClinicModal'
 import { useAuth } from '../../context/AuthContext'
+import { apiFetch } from '../../lib/apiFetch'
 import { cn } from '../../lib/utils'
 
 type ClinicListItem = {
@@ -48,12 +49,13 @@ export default function BackofficeClinicasPage() {
     setLoading(true)
     setError('')
     try {
-      const url = new URL('/api/admin/clinics', window.location.origin)
-      if (q.trim()) url.searchParams.set('q', q.trim())
-      if (status !== 'all') url.searchParams.set('status', status)
-      if (plan !== 'all') url.searchParams.set('plan', plan)
+      const params = new URLSearchParams()
+      if (q.trim()) params.set('q', q.trim())
+      if (status !== 'all') params.set('status', status)
+      if (plan !== 'all') params.set('plan', plan)
 
-      const res = await fetch(url.pathname + url.search, { headers: { Authorization: `Bearer ${token}` } })
+      const path = params.toString() ? `/api/admin/clinics?${params.toString()}` : '/api/admin/clinics'
+      const res = await apiFetch(path, { headers: { Authorization: `Bearer ${token}` } })
       const body = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(body.error || 'Falha ao buscar clínicas')
       setClinics(body)
@@ -234,4 +236,3 @@ export default function BackofficeClinicasPage() {
     </div>
   )
 }
-
