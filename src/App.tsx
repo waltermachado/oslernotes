@@ -48,7 +48,7 @@ function App() {
             </Route>
           </Route>
 
-          <Route element={<ProtectedRoute allowedRoles={['admin', 'medico', 'atendente']} />}>
+          <Route element={<ProtectedRoute allowedRoles={['admin', 'atendente']} />}>
             <Route path="/clinico" element={<ClinicoLayout />}>
               <Route index element={<Navigate to="painel" replace />} />
               <Route path="agenda" element={<ClinicoAgendaPage />} />

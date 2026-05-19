@@ -8,6 +8,10 @@ import ProntuarioPatientHeader from '../../components/clinico/prontuario/Prontua
 import ProntuarioTabs from '../../components/clinico/prontuario/ProntuarioTabs'
 import ProntuarioSidebar from '../../components/clinico/prontuario/ProntuarioSidebar'
 import ProntuarioFichaClinica from '../../components/clinico/prontuario/ProntuarioFichaClinica'
+import ProntuarioEvolucoes from '../../components/clinico/prontuario/ProntuarioEvolucoes'
+import ProntuarioReceitas from '../../components/clinico/prontuario/ProntuarioReceitas'
+import ProntuarioPedidosExame from '../../components/clinico/prontuario/ProntuarioPedidosExame'
+import ProntuarioAtestados from '../../components/clinico/prontuario/ProntuarioAtestados'
 import type { RecordResponse } from '../../components/clinico/prontuario/prontuarioTypes'
 
 export default function ClinicoProntuarioPacientePage() {
@@ -74,9 +78,31 @@ export default function ClinicoProntuarioPacientePage() {
               patientId={patientId ?? ''}
               onPatientUpdated={(next) => setData((prev) => (prev ? { ...prev, patient: next } : prev))}
             />
-          ) : (
-            <div className="bg-dark-card border border-gray-800 rounded-2xl p-6 text-gray-400">Em breve.</div>
-          )}
+          ) : active === 'evolucoes' ? (
+            <ProntuarioEvolucoes
+              patientId={patientId ?? ''}
+              token={token ?? ''}
+              role={role}
+            />
+          ) : active === 'receitas' ? (
+            <ProntuarioReceitas
+              patientId={patientId ?? ''}
+              token={token ?? ''}
+              role={role}
+            />
+          ) : active === 'exames' ? (
+            <ProntuarioPedidosExame
+              patientId={patientId ?? ''}
+              token={token ?? ''}
+              role={role}
+            />
+          ) : active === 'atestados' ? (
+            <ProntuarioAtestados
+              patientId={patientId ?? ''}
+              token={token ?? ''}
+              role={role}
+            />
+          ) : null}
         </div>
         <ProntuarioSidebar patient={patient} token={token ?? ''} patientId={patientId ?? ''} role={role} />
       </div>

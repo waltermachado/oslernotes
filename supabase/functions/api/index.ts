@@ -239,6 +239,284 @@ serve(async (req: Request) => {
 
         return json(req, 200, { patient: { ...data, foto_url: await signedPhotoUrl(admin, objectPath) } })
       }
+
+      // ------------------------------------------------------------------
+      // evolucoes → tabela: prontuarios
+      // ------------------------------------------------------------------
+      if (parts.length === 3 && parts[2] === 'evolucoes') {
+        const roleCheckEv = requireRole(auth.ctx, ['admin', 'medico'])
+        if (!roleCheckEv.ok) return json(req, roleCheckEv.status, { error: roleCheckEv.error })
+
+        if (req.method === 'GET') {
+          const { data, error } = await admin
+            .from('prontuarios')
+            .select('id, anamnese, diagnostico, observacoes, templates_utilizados, created_at, updated_at, atendimento_id, medico_id')
+            .eq('clinica_id', auth.ctx.clinicaId)
+            .eq('paciente_id', patientId)
+            .order('created_at', { ascending: false })
+            .limit(100)
+          if (error) return json(req, 500, { error: error.message })
+          return json(req, 200, { items: data ?? [] })
+        }
+
+        if (req.method === 'POST') {
+          const roleCheckWrite = requireRole(auth.ctx, ['medico'])
+          if (!roleCheckWrite.ok) return json(req, roleCheckWrite.status, { error: roleCheckWrite.error })
+
+          const body = (await readJson(req)) as Record<string, unknown> | null
+          const anamnese = String(body?.anamnese ?? '').trim() || null
+          const diagnostico = String(body?.diagnostico ?? '').trim() || null
+          const observacoes = String(body?.observacoes ?? '').trim() || null
+          if (!anamnese && !diagnostico && !observacoes) {
+            return json(req, 400, { error: 'Pelo menos um campo (anamnese, diagnostico ou observacoes) é obrigatório' })
+          }
+
+          const insert = {
+            clinica_id: auth.ctx.clinicaId,
+            paciente_id: patientId,
+            medico_id: auth.ctx.userId,
+            atendimento_id: body?.atendimento_id ?? null,
+            anamnese,
+            diagnostico,
+            observacoes,
+            templates_utilizados: Array.isArray(body?.templates_utilizados) ? body.templates_utilizados : [],
+          }
+
+          const { data, error } = await admin
+            .from('prontuarios')
+            .insert(insert)
+            .select('id, anamnese, diagnostico, observacoes, templates_utilizados, created_at, updated_at, atendimento_id, medico_id')
+            .single()
+          if (error) return json(req, 400, { error: error.message })
+
+          await writeAuditLog(admin, {
+            clinica_id: auth.ctx.clinicaId,
+            actor_user_id: auth.ctx.userId,
+            entity_type: 'prontuario',
+            entity_id: (data as Record<string, unknown>).id as string,
+            action: 'prontuario.created',
+            metadata: { paciente_id: patientId },
+          })
+
+          return json(req, 201, { item: data })
+        }
+      }
+
+      // ------------------------------------------------------------------
+      // receitas → tabela: receitas
+      // Real columns: tipo, medicamentos (jsonb), instrucoes, status
+      // ------------------------------------------------------------------
+      if (parts.length === 3 && parts[2] === 'receitas') {
+        const roleCheckRec = requireRole(auth.ctx, ['admin', 'medico'])
+        if (!roleCheckRec.ok) return json(req, roleCheckRec.status, { error: roleCheckRec.error })
+
+        if (req.method === 'GET') {
+          const { data, error } = await admin
+            .from('receitas')
+            .select('id, tipo, medicamentos, instrucoes, status, atendimento_id, created_at, medico_id')
+            .eq('clinica_id', auth.ctx.clinicaId)
+            .eq('paciente_id', patientId)
+            .order('created_at', { ascending: false })
+            .limit(100)
+          if (error) return json(req, 500, { error: error.message })
+          return json(req, 200, { items: data ?? [] })
+        }
+
+        if (req.method === 'POST') {
+          const roleCheckWrite = requireRole(auth.ctx, ['medico'])
+          if (!roleCheckWrite.ok) return json(req, roleCheckWrite.status, { error: roleCheckWrite.error })
+
+          const body = (await readJson(req)) as Record<string, unknown> | null
+          if (!Array.isArray(body?.medicamentos) || (body?.medicamentos as unknown[]).length === 0) {
+            return json(req, 400, { error: 'medicamentos é obrigatório e deve ser um array não-vazio' })
+          }
+
+          const insert = {
+            clinica_id: auth.ctx.clinicaId,
+            paciente_id: patientId,
+            medico_id: auth.ctx.userId,
+            atendimento_id: body?.atendimento_id ?? null,
+            tipo: body?.tipo ? String(body.tipo).trim() || null : null,
+            medicamentos: body.medicamentos,
+            instrucoes: body?.instrucoes ? String(body.instrucoes).trim() || null : null,
+            status: body?.status ? String(body.status) : 'rascunho',
+          }
+
+          const { data, error } = await admin
+            .from('receitas')
+            .insert(insert)
+            .select('id, tipo, medicamentos, instrucoes, status, atendimento_id, created_at, medico_id')
+            .single()
+          if (error) return json(req, 400, { error: error.message })
+
+          await writeAuditLog(admin, {
+            clinica_id: auth.ctx.clinicaId,
+            actor_user_id: auth.ctx.userId,
+            entity_type: 'receita',
+            entity_id: (data as Record<string, unknown>).id as string,
+            action: 'receita.created',
+            metadata: { paciente_id: patientId },
+          })
+
+          return json(req, 201, { item: data })
+        }
+      }
+
+      // ------------------------------------------------------------------
+      // exames → tabela: exames
+      // Real columns: tipo, descricao, arquivo_url, resultado,
+      //   data_solicitacao, data_resultado + urgente/status (added)
+      // ------------------------------------------------------------------
+      if (parts.length === 3 && parts[2] === 'exames') {
+        const roleCheckEx = requireRole(auth.ctx, ['admin', 'medico'])
+        if (!roleCheckEx.ok) return json(req, roleCheckEx.status, { error: roleCheckEx.error })
+
+        if (req.method === 'GET') {
+          const { data, error } = await admin
+            .from('exames')
+            .select('id, tipo, descricao, urgente, resultado, arquivo_url, data_solicitacao, data_resultado, status, atendimento_id, created_at, medico_id')
+            .eq('clinica_id', auth.ctx.clinicaId)
+            .eq('paciente_id', patientId)
+            .order('created_at', { ascending: false })
+            .limit(100)
+          if (error) return json(req, 500, { error: error.message })
+          return json(req, 200, { items: data ?? [] })
+        }
+
+        if (req.method === 'POST') {
+          const roleCheckWrite = requireRole(auth.ctx, ['medico'])
+          if (!roleCheckWrite.ok) return json(req, roleCheckWrite.status, { error: roleCheckWrite.error })
+
+          const body = (await readJson(req)) as Record<string, unknown> | null
+          const tipo = String(body?.tipo ?? '').trim()
+          if (!tipo) return json(req, 400, { error: 'tipo é obrigatório' })
+
+          const insert = {
+            clinica_id: auth.ctx.clinicaId,
+            paciente_id: patientId,
+            medico_id: auth.ctx.userId,
+            atendimento_id: body?.atendimento_id ?? null,
+            tipo,
+            descricao: body?.descricao ? String(body.descricao).trim() || null : null,
+            urgente: body?.urgente === true,
+            status: 'solicitado',
+            data_solicitacao: new Date().toISOString(),
+          }
+
+          const { data, error } = await admin
+            .from('exames')
+            .insert(insert)
+            .select('id, tipo, descricao, urgente, resultado, arquivo_url, data_solicitacao, data_resultado, status, atendimento_id, created_at, medico_id')
+            .single()
+          if (error) return json(req, 400, { error: error.message })
+
+          await writeAuditLog(admin, {
+            clinica_id: auth.ctx.clinicaId,
+            actor_user_id: auth.ctx.userId,
+            entity_type: 'exame',
+            entity_id: (data as Record<string, unknown>).id as string,
+            action: 'exame.created',
+            metadata: { paciente_id: patientId, tipo },
+          })
+
+          return json(req, 201, { item: data })
+        }
+      }
+
+      if (parts.length === 4 && parts[2] === 'exames' && req.method === 'PATCH') {
+        const roleCheckEx = requireRole(auth.ctx, ['medico'])
+        if (!roleCheckEx.ok) return json(req, roleCheckEx.status, { error: roleCheckEx.error })
+
+        const exameId = parts[3]
+        const body = (await readJson(req)) as Record<string, unknown> | null
+
+        const validStatuses = ['solicitado', 'coletado', 'resultado_disponivel', 'finalizado']
+        const updates: Record<string, unknown> = {}
+        if (body?.status != null) {
+          if (!validStatuses.includes(String(body.status))) return json(req, 400, { error: 'status inválido' })
+          updates.status = String(body.status)
+          if (updates.status === 'resultado_disponivel' || updates.status === 'finalizado') {
+            updates.data_resultado = new Date().toISOString()
+          }
+        }
+        if (body?.resultado != null) updates.resultado = String(body.resultado).trim() || null
+        if (body?.arquivo_url != null) updates.arquivo_url = String(body.arquivo_url).trim() || null
+        if (Object.keys(updates).length === 0) return json(req, 400, { error: 'Nenhum campo para atualizar' })
+
+        const { data, error } = await admin
+          .from('exames')
+          .update(updates)
+          .eq('clinica_id', auth.ctx.clinicaId)
+          .eq('paciente_id', patientId)
+          .eq('id', exameId)
+          .select('id, tipo, descricao, urgente, resultado, arquivo_url, data_solicitacao, data_resultado, status, atendimento_id, created_at, medico_id')
+          .single()
+        if (error) return json(req, 400, { error: error.message })
+
+        return json(req, 200, { item: data })
+      }
+
+      // ------------------------------------------------------------------
+      // atestados → tabela: atestados
+      // Real columns: dias_afastamento, cid, data_retorno, observacoes,
+      //   texto (added via migration — nullable)
+      // ------------------------------------------------------------------
+      if (parts.length === 3 && parts[2] === 'atestados') {
+        const roleCheckAt = requireRole(auth.ctx, ['admin', 'medico'])
+        if (!roleCheckAt.ok) return json(req, roleCheckAt.status, { error: roleCheckAt.error })
+
+        if (req.method === 'GET') {
+          const { data, error } = await admin
+            .from('atestados')
+            .select('id, texto, observacoes, cid, dias_afastamento, data_retorno, atendimento_id, created_at, medico_id')
+            .eq('clinica_id', auth.ctx.clinicaId)
+            .eq('paciente_id', patientId)
+            .order('created_at', { ascending: false })
+            .limit(100)
+          if (error) return json(req, 500, { error: error.message })
+          return json(req, 200, { items: data ?? [] })
+        }
+
+        if (req.method === 'POST') {
+          const roleCheckWrite = requireRole(auth.ctx, ['medico'])
+          if (!roleCheckWrite.ok) return json(req, roleCheckWrite.status, { error: roleCheckWrite.error })
+
+          const body = (await readJson(req)) as Record<string, unknown> | null
+          // Accept `texto` (new) or `observacoes` (existing column) as content
+          const textoRaw = String(body?.texto ?? body?.observacoes ?? '').trim()
+          if (!textoRaw) return json(req, 400, { error: 'texto ou observacoes é obrigatório' })
+
+          const insert = {
+            clinica_id: auth.ctx.clinicaId,
+            paciente_id: patientId,
+            medico_id: auth.ctx.userId,
+            atendimento_id: body?.atendimento_id ?? null,
+            texto: textoRaw,
+            observacoes: textoRaw,
+            cid: body?.cid ? String(body.cid).trim() || null : null,
+            dias_afastamento: body?.dias_afastamento != null ? Number(body.dias_afastamento) : 0,
+            data_retorno: body?.data_retorno ? String(body.data_retorno) : null,
+          }
+
+          const { data, error } = await admin
+            .from('atestados')
+            .insert(insert)
+            .select('id, texto, observacoes, cid, dias_afastamento, data_retorno, atendimento_id, created_at, medico_id')
+            .single()
+          if (error) return json(req, 400, { error: error.message })
+
+          await writeAuditLog(admin, {
+            clinica_id: auth.ctx.clinicaId,
+            actor_user_id: auth.ctx.userId,
+            entity_type: 'atestado',
+            entity_id: (data as Record<string, unknown>).id as string,
+            action: 'atestado.created',
+            metadata: { paciente_id: patientId },
+          })
+
+          return json(req, 201, { item: data })
+        }
+      }
     }
 
     return json(req, 404, { error: 'Not found' })

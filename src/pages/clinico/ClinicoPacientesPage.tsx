@@ -60,7 +60,7 @@ export default function ClinicoPacientesPage() {
   const [showNew, setShowNew] = useState(false)
   const [photoFile, setPhotoFile] = useState<File | null>(null)
   const [submitting, setSubmitting] = useState(false)
-  const canCreate = user?.papel === 'medico' || user?.papel === 'atendente'
+  const canCreate = user?.papel === 'medico' || user?.papel === 'atendente' || user?.papel === 'admin'
   const canEnqueue = user?.papel === 'admin' || user?.papel === 'atendente'
   const basePath = window.location.pathname.startsWith('/medico') ? '/medico' : '/clinico'
 
