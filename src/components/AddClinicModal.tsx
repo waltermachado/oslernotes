@@ -300,7 +300,7 @@ export default function AddClinicModal({ isOpen, onClose, onSuccess }: AddClinic
             type="submit"
             form="clinicForm"
             disabled={isLoading}
-            className="px-6 py-2.5 rounded-xl bg-navy-500 hover:bg-navy-600 text-ink-900 font-medium transition-colors disabled:opacity-70 flex items-center gap-2"
+            className="px-6 py-2.5 rounded-xl bg-navy-500 hover:bg-navy-600 text-cream-50 font-medium transition-colors disabled:opacity-70 flex items-center gap-2"
           >
             {isLoading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

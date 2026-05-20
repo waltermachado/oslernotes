@@ -111,7 +111,7 @@ export default function ResetPassword() {
             </div>
             <Link
               to="/forgot-password"
-              className="w-full inline-flex items-center justify-center bg-navy-500 hover:bg-navy-600 text-ink-900 font-medium py-3 px-4 rounded-xl transition-colors"
+              className="w-full inline-flex items-center justify-center bg-navy-500 hover:bg-navy-600 text-cream-50 font-medium py-3 px-4 rounded-xl transition-colors"
             >
               Solicitar novo link
             </Link>
@@ -130,7 +130,7 @@ export default function ResetPassword() {
           <button
             type="button"
             onClick={() => navigate('/login')}
-            className="w-full bg-navy-500 hover:bg-navy-600 text-ink-900 font-medium py-3 px-4 rounded-xl transition-colors"
+            className="w-full bg-navy-500 hover:bg-navy-600 text-cream-50 font-medium py-3 px-4 rounded-xl transition-colors"
           >
             Ir para login
           </button>
@@ -205,7 +205,7 @@ export default function ResetPassword() {
             <button
               type="submit"
               disabled={saving}
-              className="w-full bg-navy-500 hover:bg-navy-600 text-ink-900 font-medium py-3 px-4 rounded-xl flex items-center justify-center transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-navy-500 hover:bg-navy-600 text-cream-50 font-medium py-3 px-4 rounded-xl flex items-center justify-center transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {saving ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : 'Salvar nova senha'}
             </button>

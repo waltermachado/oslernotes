@@ -102,7 +102,7 @@ export default function Backoffice() {
             </div>
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="bg-navy-500 hover:bg-navy-600 text-ink-900 px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-colors whitespace-nowrap"
+              className="bg-navy-500 hover:bg-navy-600 text-cream-50 px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-colors whitespace-nowrap"
             >
               <Plus className="w-4 h-4" />
               Nova Clínica

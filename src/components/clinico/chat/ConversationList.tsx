@@ -49,7 +49,7 @@ export default function ConversationList(props: {
               >
                 <div
                   className={cn(
-                    'w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center text-xs font-semibold text-ink-900 shrink-0',
+                    'w-10 h-10 rounded-full bg-navy-100 flex items-center justify-center text-xs font-semibold text-ink-900 shrink-0',
                     c.id === props.selectedId ? 'ring-1 ring-brand-blue/40' : null,
                   )}
                 >

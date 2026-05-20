@@ -49,19 +49,19 @@ export default function ClinicoLayout(props: { basePath?: string }) {
     if (clinicLoading) {
       return {
         text: 'Carregando…',
-        className: 'bg-ink-400/10 text-ink-700 border border-gray-500/20',
+        className: 'bg-ink-400/10 text-ink-700 border border-cream-300',
       }
     }
     if (!clinicId) {
       return {
         text: 'Sem Clínica',
-        className: 'bg-ink-400/10 text-ink-700 border border-gray-500/20',
+        className: 'bg-ink-400/10 text-ink-700 border border-cream-300',
       }
     }
     if (!clinic) {
       return {
         text: 'Clínica Desconhecida',
-        className: 'bg-ink-400/10 text-ink-700 border border-gray-500/20',
+        className: 'bg-ink-400/10 text-ink-700 border border-cream-300',
       }
     }
     if (clinic.ativa) {
@@ -115,7 +115,7 @@ export default function ClinicoLayout(props: { basePath?: string }) {
               <button
                 type="button"
                 className={cn(
-                  'bg-navy-500 hover:bg-navy-600 text-ink-900 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors whitespace-nowrap',
+                  'bg-navy-500 hover:bg-navy-600 text-cream-50 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors whitespace-nowrap shadow-soft',
                   clinic && !clinic.ativa ? 'opacity-60 cursor-not-allowed hover:bg-navy-500' : null,
                 )}
                 disabled={!!clinic && !clinic.ativa}

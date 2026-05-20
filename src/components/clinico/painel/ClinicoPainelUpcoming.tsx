@@ -180,7 +180,7 @@ export default function ClinicoPainelUpcoming() {
                   <td className="px-6 py-4 text-sm font-semibold text-navy-500 w-[110px]">{timeStr}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-gray-700/50 flex items-center justify-center text-xs font-semibold text-ink-900">
+                      <div className="h-8 w-8 rounded-full bg-navy-100 flex items-center justify-center text-xs font-semibold text-ink-900">
                         {initials}
                       </div>
                       <div className="text-sm text-ink-900 font-medium truncate max-w-[220px]">{patientName}</div>

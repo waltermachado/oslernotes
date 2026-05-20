@@ -69,7 +69,7 @@ export default function AgendaDayView(props: {
                 className="absolute left-0 right-0 flex items-center justify-center"
                 style={{ top: ((12 * 60 - startHour * 60) / 60) * rowHeight + 28 }}
               >
-                <span className="text-[10px] uppercase tracking-[0.25em] text-gray-600">INTERVALO DE ALMOÇO</span>
+                <span className="text-[10px] uppercase tracking-[0.25em] text-ink-600">INTERVALO DE ALMOÇO</span>
               </div>
 
               {props.appointments.map((appt) => {

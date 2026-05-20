@@ -116,7 +116,7 @@ export default function BackofficePlanosPage() {
 
               <button
                 onClick={() => setEditing({ ...p })}
-                className="mt-5 w-full bg-cream-200 hover:bg-gray-700 text-ink-900 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+                className="mt-5 w-full bg-cream-200 hover:bg-cream-300 text-ink-900 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
               >
                 Editar
               </button>

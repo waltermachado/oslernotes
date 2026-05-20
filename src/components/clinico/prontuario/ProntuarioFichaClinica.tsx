@@ -117,7 +117,7 @@ export default function ProntuarioFichaClinica(props: {
                 Cancelar
               </button>
               <button
-                className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-ink-900 disabled:opacity-60"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-cream-50 disabled:opacity-60"
                 onClick={onSave}
                 type="button"
                 disabled={saving}
