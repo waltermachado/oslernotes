@@ -183,6 +183,60 @@ serve(async (req: Request) => {
         return json(req, 200, { patient: { ...data, foto_url: await signedPhotoUrl(admin, data.foto_path ?? null) } })
       }
 
+      if (parts.length === 2 && req.method === 'PATCH') {
+        const roleCheckPatch = requireRole(auth.ctx, ['admin', 'medico', 'atendente'])
+        if (!roleCheckPatch.ok) return json(req, roleCheckPatch.status, { error: roleCheckPatch.error })
+
+        const body = (await readJson(req)) as Record<string, unknown> | null
+        if (!body) return json(req, 400, { error: 'Corpo da requisição inválido' })
+
+        // Campos que podem ser atualizados via ficha clínica
+        const allowed = [
+          'queixa_principal', 'historico_breve_doencas', 'futuras_anotacoes',
+          'doencas', 'remedios', 'medicamentos_em_uso',
+          'nome_completo', 'cpf', 'data_nascimento', 'sexo', 'sexualidade',
+          'telefone', 'email', 'endereco', 'convenio', 'numero_carteirinha', 'nome_mae',
+        ]
+        const updates: Record<string, unknown> = {}
+        for (const key of allowed) {
+          if (Object.prototype.hasOwnProperty.call(body, key)) {
+            updates[key] = body[key]
+          }
+        }
+        if (Object.keys(updates).length === 0) return json(req, 400, { error: 'Nenhum campo para atualizar' })
+
+        // Sync remedios → medicamentos_em_uso
+        if (updates.remedios && !updates.medicamentos_em_uso) {
+          updates.medicamentos_em_uso = updates.remedios
+        }
+
+        const { data, error } = await admin
+          .from('pacientes')
+          .update(updates)
+          .eq('clinica_id', auth.ctx.clinicaId)
+          .eq('id', patientId)
+          .select('*')
+          .single()
+        if (error) return json(req, 400, { error: error.message })
+
+        await writeAuditLog(admin, {
+          clinica_id: auth.ctx.clinicaId,
+          actor_user_id: auth.ctx.userId,
+          entity_type: 'paciente',
+          entity_id: patientId,
+          action: 'patient.updated',
+          metadata: { fields: Object.keys(updates) },
+        })
+
+        return json(req, 200, {
+          patient: {
+            ...data,
+            cpf: data.cpf ? String(data.cpf).replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : null,
+            foto_url: await signedPhotoUrl(admin, data.foto_path ?? null),
+          },
+        })
+      }
+
       if (parts.length === 3 && parts[2] === 'audit' && req.method === 'GET') {
         const roleCheck2 = requireRole(auth.ctx, ['admin', 'medico'])
         if (!roleCheck2.ok) return json(req, roleCheck2.status, { error: roleCheck2.error })
