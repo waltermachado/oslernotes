@@ -5,6 +5,3 @@ enabled = true
 
 [db]
 shadow_port = 54320
-
-[functions]
-enabled = true
