@@ -144,6 +144,7 @@ export default function ClinicoPacientesPage() {
       const { data: created, error: insertError } = await supabase
         .from('pacientes')
         .insert({
+          clinica_id: user?.clinica_id ?? null,
           nome_completo: values.nome_completo,
           cpf: cpf || null,
           data_nascimento: dataNascimento,

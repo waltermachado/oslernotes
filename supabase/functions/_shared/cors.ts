@@ -1,14 +1,10 @@
 declare const Deno: { env: { get: (key: string) => string | undefined } }
 
 export function getAllowedOrigin(req: Request) {
-  const envOrigin = (Deno.env.get('CORS_ORIGIN') ?? '').trim()
-  const publicUrl = (Deno.env.get('PUBLIC_APP_URL') ?? '').trim()
-  const origin = req.headers.get('origin') ?? ''
-
-  const allowed = new Set<string>([envOrigin, publicUrl].filter(Boolean))
-  if (!origin) return allowed.values().next().value ?? '*'
-  if (allowed.has(origin)) return origin
-  return allowed.size ? '' : '*'
+  // Return the requesting origin (or * if none), allowing any domain.
+  // Security is enforced via JWT validation in each route handler.
+  const origin = req.headers.get('origin')
+  return origin ?? '*'
 }
 
 export function corsHeaders(req: Request) {
