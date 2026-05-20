@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { useAuth } from '../../context/AuthContext'
 import { supabase } from '../../lib/supabase'
+import ClinicoPainelSummary from '../../components/clinico/painel/ClinicoPainelSummary'
 import ClinicoPainelUpcoming from '../../components/clinico/painel/ClinicoPainelUpcoming'
 
 type ClinicLite = {
@@ -57,6 +58,10 @@ export default function ClinicoPainelPage() {
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Bem-vindo(a), {greetingName}</h1>
           <p className="text-gray-400 text-sm mt-1">{subtitle}</p>
+        </div>
+
+        <div className="mt-8">
+          <ClinicoPainelSummary />
         </div>
 
         <div className="mt-8">

@@ -22,6 +22,7 @@ import ClinicoProntuariosPage from './pages/clinico/ClinicoProntuariosPage';
 import ClinicoProntuarioPacientePage from './pages/clinico/ClinicoProntuarioPacientePage';
 import ClinicoFilaPage from './pages/clinico/ClinicoFilaPage';
 import ClinicoAgendaPage from './pages/clinico/ClinicoAgendaPage';
+import ClinicoFinanceiroPage from './pages/clinico/ClinicoFinanceiroPage';
 
 const Atendimento = () => <div className="p-8"><h1>Módulo Atendimento (Em breve)</h1></div>;
 
@@ -59,7 +60,7 @@ function App() {
               <Route path="prontuarios/:patientId" element={<ClinicoProntuarioPacientePage />} />
               <Route path="exames" element={<ClinicoPlaceholderPage title="Exames" />} />
               <Route path="chat" element={<ClinicoPlaceholderPage title="Chat" />} />
-              <Route path="financeiro" element={<ClinicoPlaceholderPage title="Financeiro" />} />
+              <Route path="financeiro" element={<ClinicoFinanceiroPage />} />
               <Route path="configuracoes" element={<ClinicoPlaceholderPage title="Configurações" />} />
             </Route>
           </Route>
