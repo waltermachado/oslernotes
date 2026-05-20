@@ -125,12 +125,12 @@ export default function ProntuarioEvolucoes({ patientId, token, role }: Props) {
     <section className="space-y-6">
       {/* header */}
       <div className="flex items-center justify-between">
-        <div className="text-xs font-semibold tracking-[0.2em] uppercase text-gray-400">Evoluções Clínicas</div>
+        <div className="text-xs font-semibold tracking-[0.2em] uppercase text-ink-500">Evoluções Clínicas</div>
         {canCreate && !showForm && (
           <button
             type="button"
             onClick={() => setShowForm(true)}
-            className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-brand-blue hover:bg-blue-600 text-white text-sm"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-ink-900 text-sm"
           >
             <Plus className="w-4 h-4" />
             Nova Evolução
@@ -140,20 +140,20 @@ export default function ProntuarioEvolucoes({ patientId, token, role }: Props) {
 
       {/* inline form */}
       {showForm && (
-        <div className="bg-dark-card border border-gray-800 rounded-2xl p-5 space-y-4">
-          <div className="text-sm font-medium text-gray-200">Nova Evolução</div>
+        <div className="bg-surface border border-cream-300 rounded-2xl p-5 space-y-4">
+          <div className="text-sm font-medium text-ink-700">Nova Evolução</div>
 
           {formError && (
-            <div className="bg-red-500/10 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">
+            <div className="bg-rose-50 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">
               {formError}
             </div>
           )}
 
           <div>
-            <label className="text-xs text-gray-400 block mb-1">Anamnese</label>
+            <label className="text-xs text-ink-500 block mb-1">Anamnese</label>
             <textarea
               rows={4}
-              className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white resize-y"
+              className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900 resize-y"
               placeholder="Queixa principal, história da doença atual, antecedentes..."
               value={anamnese}
               onChange={(e) => setAnamnese(e.target.value)}
@@ -161,10 +161,10 @@ export default function ProntuarioEvolucoes({ patientId, token, role }: Props) {
           </div>
 
           <div>
-            <label className="text-xs text-gray-400 block mb-1">Diagnóstico</label>
+            <label className="text-xs text-ink-500 block mb-1">Diagnóstico</label>
             <textarea
               rows={3}
-              className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white resize-y"
+              className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900 resize-y"
               placeholder="Hipótese diagnóstica ou diagnóstico definitivo..."
               value={diagnostico}
               onChange={(e) => setDiagnostico(e.target.value)}
@@ -172,10 +172,10 @@ export default function ProntuarioEvolucoes({ patientId, token, role }: Props) {
           </div>
 
           <div>
-            <label className="text-xs text-gray-400 block mb-1">Observações / Conduta</label>
+            <label className="text-xs text-ink-500 block mb-1">Observações / Conduta</label>
             <textarea
               rows={3}
-              className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white resize-y"
+              className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900 resize-y"
               placeholder="Conduta, plano terapêutico, observações adicionais..."
               value={observacoes}
               onChange={(e) => setObservacoes(e.target.value)}
@@ -187,7 +187,7 @@ export default function ProntuarioEvolucoes({ patientId, token, role }: Props) {
               type="button"
               onClick={resetForm}
               disabled={saving}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/40 border border-gray-800 text-gray-200 hover:bg-gray-900/60 text-sm"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/40 border border-cream-300 text-ink-700 hover:bg-gray-900/60 text-sm"
             >
               <X className="w-4 h-4" />
               Cancelar
@@ -196,7 +196,7 @@ export default function ProntuarioEvolucoes({ patientId, token, role }: Props) {
               type="button"
               onClick={onSave}
               disabled={saving}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-brand-blue hover:bg-blue-600 text-white disabled:opacity-60 text-sm"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-ink-900 disabled:opacity-60 text-sm"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Salvando...' : 'Salvar'}
@@ -207,11 +207,11 @@ export default function ProntuarioEvolucoes({ patientId, token, role }: Props) {
 
       {/* list */}
       {loading ? (
-        <div className="text-gray-400 text-sm">Carregando evoluções...</div>
+        <div className="text-ink-500 text-sm">Carregando evoluções...</div>
       ) : error ? (
-        <div className="bg-red-500/10 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">{error}</div>
+        <div className="bg-rose-50 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">{error}</div>
       ) : items.length === 0 ? (
-        <div className="bg-dark-card border border-gray-800 rounded-2xl p-6 text-center text-gray-500 text-sm">
+        <div className="bg-surface border border-cream-300 rounded-2xl p-6 text-center text-ink-500 text-sm">
           Nenhuma evolução registrada ainda.
         </div>
       ) : (
@@ -222,18 +222,18 @@ export default function ProntuarioEvolucoes({ patientId, token, role }: Props) {
             const isLong = fullText.length > 400
             const displayText = isLong && !isExpanded ? `${fullText.slice(0, 400)}...` : fullText
             return (
-              <div key={item.id} className="bg-dark-card border border-gray-800 rounded-2xl p-5 space-y-3">
+              <div key={item.id} className="bg-surface border border-cream-300 rounded-2xl p-5 space-y-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-0.5">
-                    <div className="text-xs text-gray-400">{formatDate(item.created_at)}</div>
+                    <div className="text-xs text-ink-500">{formatDate(item.created_at)}</div>
                   </div>
                 </div>
 
                 <div className="space-y-3">
                   {item.anamnese && (
                     <div>
-                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Anamnese</div>
-                      <div className="text-sm text-white whitespace-pre-wrap leading-relaxed">
+                      <div className="text-xs font-semibold text-ink-500 uppercase tracking-wide mb-1">Anamnese</div>
+                      <div className="text-sm text-ink-900 whitespace-pre-wrap leading-relaxed">
                         {isLong && !isExpanded && item.anamnese.length > 400
                           ? `${item.anamnese.slice(0, 400)}...`
                           : item.anamnese}
@@ -242,18 +242,18 @@ export default function ProntuarioEvolucoes({ patientId, token, role }: Props) {
                   )}
                   {item.diagnostico && (
                     <div>
-                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Diagnóstico</div>
-                      <div className="text-sm text-white whitespace-pre-wrap leading-relaxed">{item.diagnostico}</div>
+                      <div className="text-xs font-semibold text-ink-500 uppercase tracking-wide mb-1">Diagnóstico</div>
+                      <div className="text-sm text-ink-900 whitespace-pre-wrap leading-relaxed">{item.diagnostico}</div>
                     </div>
                   )}
                   {item.observacoes && (
                     <div>
-                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Observações</div>
-                      <div className="text-sm text-white whitespace-pre-wrap leading-relaxed">{item.observacoes}</div>
+                      <div className="text-xs font-semibold text-ink-500 uppercase tracking-wide mb-1">Observações</div>
+                      <div className="text-sm text-ink-900 whitespace-pre-wrap leading-relaxed">{item.observacoes}</div>
                     </div>
                   )}
                   {!item.anamnese && !item.diagnostico && !item.observacoes && (
-                    <div className="text-sm text-white whitespace-pre-wrap leading-relaxed">{displayText}</div>
+                    <div className="text-sm text-ink-900 whitespace-pre-wrap leading-relaxed">{displayText}</div>
                   )}
                 </div>
 
@@ -261,7 +261,7 @@ export default function ProntuarioEvolucoes({ patientId, token, role }: Props) {
                   <button
                     type="button"
                     onClick={() => toggleExpand(item.id)}
-                    className="inline-flex items-center gap-1 text-xs text-brand-blue hover:text-blue-400"
+                    className="inline-flex items-center gap-1 text-xs text-navy-500 hover:text-blue-400"
                   >
                     {isExpanded ? (
                       <>

@@ -59,9 +59,9 @@ export default function ClinicoProntuarioPacientePage() {
 
   const patient = data?.patient
 
-  if (loading) return <div className="text-gray-400">Carregando prontuário...</div>
-  if (error) return <div className="bg-red-500/10 border border-red-500/40 text-red-400 p-4 rounded-2xl">{error}</div>
-  if (!patient || visibility === 'none') return <div className="text-gray-400">Prontuário indisponível.</div>
+  if (loading) return <div className="text-ink-500">Carregando prontuário...</div>
+  if (error) return <div className="bg-rose-50 border border-red-500/40 text-red-400 p-4 rounded-2xl">{error}</div>
+  if (!patient || visibility === 'none') return <div className="text-ink-500">Prontuário indisponível.</div>
 
   return (
     <div className="space-y-6">

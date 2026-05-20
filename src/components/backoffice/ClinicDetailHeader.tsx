@@ -17,19 +17,19 @@ export default function ClinicDetailHeader(props: {
   return (
     <div className="flex items-center justify-between gap-4">
       <div className="flex items-center gap-3">
-        <Link to="/backoffice/clinicas" className="p-2 rounded-xl hover:bg-white/5 text-gray-300 hover:text-white">
+        <Link to="/backoffice/clinicas" className="p-2 rounded-xl hover:bg-white/5 text-ink-700 hover:text-ink-800">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
           <h2 className="text-2xl font-bold leading-tight">{props.nome}</h2>
-          <div className="text-sm text-gray-400">CNPJ {props.cnpj}</div>
+          <div className="text-sm text-ink-500">CNPJ {props.cnpj}</div>
         </div>
       </div>
       <div className="flex items-center gap-2">
         <span
           className={cn(
             'inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border',
-            props.ativa ? 'bg-green-500/10 text-brand-green border-green-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20',
+            props.ativa ? 'bg-sage-50 text-sage-400 border-sage-100' : 'bg-rose-50 text-rose-400 border-rose-100',
           )}
         >
           {props.ativa ? 'Ativa' : 'Inativa'}
@@ -40,8 +40,8 @@ export default function ClinicDetailHeader(props: {
             tier === 'ouro'
               ? 'bg-amber-500/10 text-amber-300 border-amber-500/20'
               : tier === 'prata'
-                ? 'bg-brand-blue/10 text-brand-blue border-blue-500/20'
-                : 'bg-gray-500/10 text-gray-300 border-gray-500/20',
+                ? 'bg-navy-500/10 text-navy-500 border-blue-500/20'
+                : 'bg-ink-400/10 text-ink-700 border-gray-500/20',
           )}
         >
           {props.planLabel(tier)}

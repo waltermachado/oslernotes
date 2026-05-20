@@ -98,7 +98,7 @@ export default function ProntuarioFichaClinica(props: {
         <div className="flex items-center justify-end gap-2">
           {!editing ? (
             <button
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/40 border border-gray-800 text-gray-200 hover:bg-gray-900/60"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/40 border border-cream-300 text-ink-700 hover:bg-gray-900/60"
               onClick={() => setEditing(true)}
               type="button"
             >
@@ -108,7 +108,7 @@ export default function ProntuarioFichaClinica(props: {
           ) : (
             <>
               <button
-                className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/40 border border-gray-800 text-gray-200 hover:bg-gray-900/60"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/40 border border-cream-300 text-ink-700 hover:bg-gray-900/60"
                 onClick={onCancel}
                 type="button"
                 disabled={saving}
@@ -117,7 +117,7 @@ export default function ProntuarioFichaClinica(props: {
                 Cancelar
               </button>
               <button
-                className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-brand-blue hover:bg-blue-600 text-white disabled:opacity-60"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-ink-900 disabled:opacity-60"
                 onClick={onSave}
                 type="button"
                 disabled={saving}
@@ -130,18 +130,18 @@ export default function ProntuarioFichaClinica(props: {
         </div>
       ) : null}
 
-      {error ? <div className="bg-red-500/10 border border-red-500/40 text-red-400 p-3 rounded-xl">{error}</div> : null}
+      {error ? <div className="bg-rose-50 border border-red-500/40 text-red-400 p-3 rounded-xl">{error}</div> : null}
 
-      <div className="bg-dark-card border border-gray-800 rounded-2xl p-6">
-        <div className="text-xs font-semibold tracking-[0.2em] uppercase text-gray-400">Atendimento Atual</div>
+      <div className="bg-surface border border-cream-300 rounded-2xl p-6">
+        <div className="text-xs font-semibold tracking-[0.2em] uppercase text-ink-500">Atendimento Atual</div>
         <div className="mt-4 grid grid-cols-1 gap-4">
           <div>
-            <div className="text-sm text-gray-400">Queixa principal</div>
-            <div className="mt-1 text-white">
+            <div className="text-sm text-ink-500">Queixa principal</div>
+            <div className="mt-1 text-ink-900">
               {props.visibility === 'full' ? (
                 editing ? (
                   <input
-                    className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white"
+                    className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900"
                     value={queixa}
                     onChange={(e) => setQueixa(e.target.value)}
                   />
@@ -154,13 +154,13 @@ export default function ProntuarioFichaClinica(props: {
             </div>
           </div>
           <div>
-            <div className="text-sm text-gray-400">Histórico / HDA</div>
-            <div className="mt-1 text-white whitespace-pre-wrap">
+            <div className="text-sm text-ink-500">Histórico / HDA</div>
+            <div className="mt-1 text-ink-900 whitespace-pre-wrap">
               {props.visibility === 'full' ? (
                 editing ? (
                   <textarea
                     rows={6}
-                    className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white"
+                    className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900"
                     value={historico}
                     onChange={(e) => setHistorico(e.target.value)}
                   />
@@ -175,16 +175,16 @@ export default function ProntuarioFichaClinica(props: {
         </div>
       </div>
 
-      <div className="bg-dark-card border border-gray-800 rounded-2xl p-6">
-        <div className="text-xs font-semibold tracking-[0.2em] uppercase text-gray-400">Doenças e Remédios</div>
+      <div className="bg-surface border border-cream-300 rounded-2xl p-6">
+        <div className="text-xs font-semibold tracking-[0.2em] uppercase text-ink-500">Doenças e Remédios</div>
         <div className="mt-4 grid grid-cols-1 gap-4">
           <div>
-            <div className="text-sm text-gray-400">Doenças (separe por vírgula)</div>
-            <div className="mt-1 text-white whitespace-pre-wrap">
+            <div className="text-sm text-ink-500">Doenças (separe por vírgula)</div>
+            <div className="mt-1 text-ink-900 whitespace-pre-wrap">
               {props.visibility === 'full' ? (
                 editing ? (
                   <input
-                    className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white"
+                    className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900"
                     value={doencasText}
                     onChange={(e) => setDoencasText(e.target.value)}
                   />
@@ -197,13 +197,13 @@ export default function ProntuarioFichaClinica(props: {
             </div>
           </div>
           <div>
-            <div className="text-sm text-gray-400">Remédios (1 por linha: Nome | Dosagem | Frequência)</div>
-            <div className="mt-1 text-white whitespace-pre-wrap">
+            <div className="text-sm text-ink-500">Remédios (1 por linha: Nome | Dosagem | Frequência)</div>
+            <div className="mt-1 text-ink-900 whitespace-pre-wrap">
               {props.visibility === 'full' ? (
                 editing ? (
                   <textarea
                     rows={6}
-                    className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white"
+                    className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900"
                     value={remediosRaw}
                     onChange={(e) => setRemediosRaw(e.target.value)}
                   />
@@ -212,8 +212,8 @@ export default function ProntuarioFichaClinica(props: {
                     <div className="space-y-2">
                       {(fullPatient.remedios ?? []).map((r, idx) => (
                         <div key={idx} className="border-l-2 border-brand-blue pl-3">
-                          <div className="text-white font-semibold text-sm">{r.nome}</div>
-                          <div className="text-gray-400 text-xs">
+                          <div className="text-ink-900 font-semibold text-sm">{r.nome}</div>
+                          <div className="text-ink-500 text-xs">
                             {r.dosagem} • {r.frequencia}
                           </div>
                         </div>
@@ -231,14 +231,14 @@ export default function ProntuarioFichaClinica(props: {
         </div>
       </div>
 
-      <div className="bg-dark-card border border-gray-800 rounded-2xl p-6">
-        <div className="text-xs font-semibold tracking-[0.2em] uppercase text-gray-400">Futuras Anotações</div>
-        <div className="mt-3 text-white whitespace-pre-wrap">
+      <div className="bg-surface border border-cream-300 rounded-2xl p-6">
+        <div className="text-xs font-semibold tracking-[0.2em] uppercase text-ink-500">Futuras Anotações</div>
+        <div className="mt-3 text-ink-900 whitespace-pre-wrap">
           {props.visibility === 'full' ? (
             editing ? (
               <textarea
                 rows={5}
-                className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white"
+                className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900"
                 value={futuras}
                 onChange={(e) => setFuturas(e.target.value)}
               />

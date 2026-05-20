@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { PreferencesProvider } from './context/PreferencesContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Pages
@@ -23,6 +24,7 @@ import ClinicoProntuarioPacientePage from './pages/clinico/ClinicoProntuarioPaci
 import ClinicoFilaPage from './pages/clinico/ClinicoFilaPage';
 import ClinicoAgendaPage from './pages/clinico/ClinicoAgendaPage';
 import ClinicoFinanceiroPage from './pages/clinico/ClinicoFinanceiroPage';
+import ClinicoConfiguracoesPage from './pages/clinico/ClinicoConfiguracoesPage';
 
 const Atendimento = () => <div className="p-8"><h1>Módulo Atendimento (Em breve)</h1></div>;
 

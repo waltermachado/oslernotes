@@ -18,12 +18,12 @@ export default function ClinicoPainelRevenue() {
   ]
 
   return (
-    <section className="bg-dark-card border border-gray-800 rounded-2xl p-6">
+    <section className="bg-surface border border-cream-300 rounded-2xl p-6">
       <div className="flex items-center justify-between gap-4">
         <div className="text-lg font-semibold tracking-tight">Análise de Receita Mensal</div>
         <div className="flex items-center gap-2">
-          <button className="px-3 py-1 text-xs font-semibold bg-gray-800/40 rounded-lg text-gray-200">Mês</button>
-          <button className="px-3 py-1 text-xs font-semibold hover:bg-gray-800/40 rounded-lg text-gray-300 transition-colors">
+          <button className="px-3 py-1 text-xs font-semibold bg-cream-200/60 rounded-lg text-ink-700">Mês</button>
+          <button className="px-3 py-1 text-xs font-semibold hover:bg-cream-200/60 rounded-lg text-ink-700 transition-colors">
             Ano
           </button>
         </div>
@@ -34,17 +34,17 @@ export default function ClinicoPainelRevenue() {
           <div key={b.key} className="flex flex-col items-center gap-2 flex-1">
             <div
               className={cn(
-                'w-full rounded-t-lg bg-brand-blue/15 relative overflow-hidden',
+                'w-full rounded-t-lg bg-navy-500/15 relative overflow-hidden',
                 b.highlight ? 'ring-2 ring-brand-blue/30' : null,
               )}
               style={{ height: `${b.height}%` }}
             >
               <div
-                className={cn('absolute bottom-0 left-0 right-0 bg-brand-blue rounded-t-lg transition-colors', b.highlight ? 'opacity-100' : 'opacity-80')}
+                className={cn('absolute bottom-0 left-0 right-0 bg-navy-500 rounded-t-lg transition-colors', b.highlight ? 'opacity-100' : 'opacity-80')}
                 style={{ height: b.highlight ? '100%' : '60%' }}
               />
             </div>
-            <div className={cn('text-[10px] uppercase tracking-[0.2em] font-semibold', b.highlight ? 'text-brand-blue' : 'text-gray-500')}>
+            <div className={cn('text-[10px] uppercase tracking-[0.2em] font-semibold', b.highlight ? 'text-navy-500' : 'text-ink-500')}>
               {b.label}
             </div>
           </div>

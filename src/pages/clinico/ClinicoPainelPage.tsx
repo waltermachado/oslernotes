@@ -56,8 +56,8 @@ export default function ClinicoPainelPage() {
     <div className="p-6">
       <div className="max-w-7xl mx-auto">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Bem-vindo(a), {greetingName}</h1>
-          <p className="text-gray-400 text-sm mt-1">{subtitle}</p>
+          <h1 className="font-normal text-ink-900 text-5xl">Bem-vindo(a), {greetingName}</h1>
+          <p className="text-ink-500 text-sm mt-1">{subtitle}</p>
         </div>
 
         <div className="mt-8">

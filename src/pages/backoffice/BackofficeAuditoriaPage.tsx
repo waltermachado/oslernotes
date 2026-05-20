@@ -54,7 +54,7 @@ export default function BackofficeAuditoriaPage() {
     <div>
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-1">Auditoria</h2>
-        <p className="text-gray-400 text-sm">Eventos administrativos e bloqueios por limite.</p>
+        <p className="text-ink-500 text-sm">Eventos administrativos e bloqueios por limite.</p>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
@@ -62,28 +62,28 @@ export default function BackofficeAuditoriaPage() {
           value={clinicId}
           onChange={(e) => setClinicId(e.target.value)}
           placeholder="clinica_id (opcional)"
-          className="bg-dark-input border border-gray-800 rounded-xl px-4 py-2 text-sm text-gray-200 w-full sm:w-80"
+          className="bg-sunken border border-cream-300 rounded-xl px-4 py-2 text-sm text-ink-700 w-full sm:w-80"
         />
         <input
           value={action}
           onChange={(e) => setAction(e.target.value)}
           placeholder="action (opcional)"
-          className="bg-dark-input border border-gray-800 rounded-xl px-4 py-2 text-sm text-gray-200 w-full sm:w-64"
+          className="bg-sunken border border-cream-300 rounded-xl px-4 py-2 text-sm text-ink-700 w-full sm:w-64"
         />
         <button
           onClick={() => void load()}
-          className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+          className="bg-cream-200 hover:bg-gray-700 text-ink-900 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
         >
           Filtrar
         </button>
       </div>
 
-      {error && <div className="mb-6 bg-red-500/10 border border-red-500/50 text-red-500 text-sm p-4 rounded-xl">{error}</div>}
+      {error && <div className="mb-6 bg-rose-50 border border-rose-100 text-rose-400 text-sm p-4 rounded-xl">{error}</div>}
 
-      <div className="bg-dark-card border border-gray-800 rounded-2xl overflow-hidden">
+      <div className="bg-surface border border-cream-300 rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-black/20 text-gray-500">
+            <thead className="bg-black/20 text-ink-500">
               <tr>
                 <th className="px-6 py-3 font-medium">Quando</th>
                 <th className="px-6 py-3 font-medium">Clínica</th>
@@ -91,22 +91,22 @@ export default function BackofficeAuditoriaPage() {
                 <th className="px-6 py-3 font-medium">Entidade</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800">
+            <tbody className="divide-y divide-cream-300">
               {loading ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-6 text-gray-500">Carregando...</td>
+                  <td colSpan={4} className="px-6 py-6 text-ink-500">Carregando...</td>
                 </tr>
               ) : logs.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-6 text-gray-500">Sem eventos.</td>
+                  <td colSpan={4} className="px-6 py-6 text-ink-500">Sem eventos.</td>
                 </tr>
               ) : (
                 logs.map((l) => (
                   <tr key={l.id} className="hover:bg-white/5">
-                    <td className="px-6 py-3 text-gray-300">{new Date(l.created_at).toLocaleString('pt-BR')}</td>
-                    <td className="px-6 py-3 text-gray-400 font-mono text-xs">{l.clinica_id}</td>
-                    <td className="px-6 py-3 text-gray-200 font-medium">{l.action}</td>
-                    <td className="px-6 py-3 text-gray-400">{l.entity_type}</td>
+                    <td className="px-6 py-3 text-ink-700">{new Date(l.created_at).toLocaleString('pt-BR')}</td>
+                    <td className="px-6 py-3 text-ink-500 font-mono text-xs">{l.clinica_id}</td>
+                    <td className="px-6 py-3 text-ink-700 font-medium">{l.action}</td>
+                    <td className="px-6 py-3 text-ink-500">{l.entity_type}</td>
                   </tr>
                 ))
               )}

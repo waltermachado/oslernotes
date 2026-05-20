@@ -18,14 +18,14 @@ export default function ClinicoSidebar(props: { role: ClinicoRole; userName: str
   }
 
   return (
-    <aside className="w-[260px] shrink-0 border-r border-gray-800 bg-dark-card/20">
-      <div className="h-16 px-5 flex items-center gap-3 border-b border-gray-800">
+    <aside className="w-[260px] shrink-0 border-r border-cream-300 bg-surface/20">
+      <div className="h-16 px-5 flex items-center gap-3 border-b border-cream-300">
         <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center overflow-hidden">
           <BrandLogo className="w-7 h-7" />
         </div>
         <div className="leading-tight">
-          <div className="text-white font-semibold tracking-tight">Osler Notes</div>
-          <div className="text-[10px] text-gray-400 tracking-[0.22em] uppercase">Prontuário eletrônico</div>
+          <div className="text-ink-900 font-semibold tracking-tight">Osler Notes</div>
+          <div className="text-[10px] text-ink-500 tracking-[0.22em] uppercase">Prontuário eletrônico</div>
         </div>
       </div>
 
@@ -40,7 +40,7 @@ export default function ClinicoSidebar(props: { role: ClinicoRole; userName: str
                 className={({ isActive }) =>
                   cn(
                     'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors',
-                    isActive ? 'bg-brand-blue/15 text-white' : 'text-gray-300 hover:bg-gray-800/40 hover:text-white',
+                    isActive ? 'bg-navy-500/15 text-ink-900' : 'text-ink-700 hover:bg-cream-200/60 hover:text-ink-800',
                   )
                 }
                 end
@@ -50,7 +50,7 @@ export default function ClinicoSidebar(props: { role: ClinicoRole; userName: str
                     <span
                       className={cn(
                         'w-8 h-8 rounded-lg flex items-center justify-center',
-                        isActive ? 'bg-brand-blue/20 text-brand-blue' : 'bg-gray-800/30 text-gray-400 group-hover:text-gray-200',
+                        isActive ? 'bg-navy-500/20 text-navy-500' : 'bg-cream-200/40 text-ink-500 group-hover:text-ink-700',
                       )}
                     >
                       <Icon className="w-4 h-4" />
@@ -65,18 +65,18 @@ export default function ClinicoSidebar(props: { role: ClinicoRole; userName: str
       </nav>
 
       <div className="mt-auto px-4 pb-4">
-        <div className="border-t border-gray-800 pt-4">
-          <div className="flex items-center gap-3 rounded-2xl bg-dark-input/70 border border-gray-800 px-3 py-3">
-            <div className="w-9 h-9 rounded-full bg-gray-700/60 flex items-center justify-center text-xs font-semibold text-gray-100">
+        <div className="border-t border-cream-300 pt-4">
+          <div className="flex items-center gap-3 rounded-2xl bg-sunken/70 border border-cream-300 px-3 py-3">
+            <div className="w-9 h-9 rounded-full bg-navy-100 flex items-center justify-center text-xs font-semibold text-ink-900">
               {initials(props.userName)}
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-sm font-medium truncate">{props.userName}</div>
-              <div className="text-xs text-gray-400 truncate">{props.userSubtitle}</div>
+              <div className="text-xs text-ink-500 truncate">{props.userSubtitle}</div>
             </div>
             <button
               onClick={onLogout}
-              className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/40 transition-colors"
+              className="p-2 rounded-xl text-ink-500 hover:text-ink-800 hover:bg-cream-200/60 transition-colors"
               aria-label="Sair"
               title="Sair"
             >

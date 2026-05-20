@@ -32,10 +32,10 @@ const statusLabels: Record<PedidoExameStatus, string> = {
 }
 
 const statusColors: Record<PedidoExameStatus, string> = {
-  solicitado: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10',
+  solicitado: 'text-yellow-400 border-yellow-500/30 bg-clay-50',
   coletado: 'text-blue-400 border-blue-500/30 bg-blue-500/10',
   resultado_disponivel: 'text-purple-400 border-purple-500/30 bg-purple-500/10',
-  finalizado: 'text-green-400 border-green-500/30 bg-green-500/10',
+  finalizado: 'text-green-400 border-green-500/30 bg-sage-50',
 }
 
 const statusIcons: Record<PedidoExameStatus, React.ComponentType<{ className?: string }>> = {
@@ -160,12 +160,12 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
     <section className="space-y-6">
       {/* header */}
       <div className="flex items-center justify-between">
-        <div className="text-xs font-semibold tracking-[0.2em] uppercase text-gray-400">Pedidos de Exame</div>
+        <div className="text-xs font-semibold tracking-[0.2em] uppercase text-ink-500">Pedidos de Exame</div>
         {canCreate && !showForm && (
           <button
             type="button"
             onClick={() => setShowForm(true)}
-            className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-brand-blue hover:bg-blue-600 text-white text-sm"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-ink-900 text-sm"
           >
             <Plus className="w-4 h-4" />
             Novo Pedido
@@ -175,21 +175,21 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
 
       {/* inline form */}
       {showForm && (
-        <div className="bg-dark-card border border-gray-800 rounded-2xl p-5 space-y-4">
-          <div className="text-sm font-medium text-gray-200">Novo Pedido de Exame</div>
+        <div className="bg-surface border border-cream-300 rounded-2xl p-5 space-y-4">
+          <div className="text-sm font-medium text-ink-700">Novo Pedido de Exame</div>
 
           {formError && (
-            <div className="bg-red-500/10 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">
+            <div className="bg-rose-50 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">
               {formError}
             </div>
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs text-gray-400 block mb-1">Tipo do exame *</label>
+              <label className="text-xs text-ink-500 block mb-1">Tipo do exame *</label>
               <input
                 type="text"
-                className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white"
+                className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900"
                 placeholder="Ex: Hemograma, Raio-X, Glicemia"
                 value={tipo}
                 onChange={(e) => setTipo(e.target.value)}
@@ -205,7 +205,7 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
                     className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${urgente ? 'translate-x-4' : ''}`}
                   />
                 </div>
-                <span className={`text-sm ${urgente ? 'text-red-400' : 'text-gray-400'}`}>
+                <span className={`text-sm ${urgente ? 'text-red-400' : 'text-ink-500'}`}>
                   {urgente ? (
                     <span className="flex items-center gap-1">
                       <AlertTriangle className="w-3.5 h-3.5" /> Urgente
@@ -219,10 +219,10 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
           </div>
 
           <div>
-            <label className="text-xs text-gray-400 block mb-1">Descrição / indicação clínica</label>
+            <label className="text-xs text-ink-500 block mb-1">Descrição / indicação clínica</label>
             <textarea
               rows={3}
-              className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white resize-none"
+              className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900 resize-none"
               placeholder="Indicação clínica, hipótese diagnóstica..."
               value={descricao}
               onChange={(e) => setDescricao(e.target.value)}
@@ -234,7 +234,7 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
               type="button"
               onClick={resetForm}
               disabled={saving}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/40 border border-gray-800 text-gray-200 hover:bg-gray-900/60 text-sm"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/40 border border-cream-300 text-ink-700 hover:bg-gray-900/60 text-sm"
             >
               <X className="w-4 h-4" />
               Cancelar
@@ -243,7 +243,7 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
               type="button"
               onClick={onSave}
               disabled={saving}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-brand-blue hover:bg-blue-600 text-white disabled:opacity-60 text-sm"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-ink-900 disabled:opacity-60 text-sm"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Salvando...' : 'Salvar Pedido'}
@@ -253,16 +253,16 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
       )}
 
       {updateError && (
-        <div className="bg-red-500/10 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">{updateError}</div>
+        <div className="bg-rose-50 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">{updateError}</div>
       )}
 
       {/* list */}
       {loading ? (
-        <div className="text-gray-400 text-sm">Carregando exames...</div>
+        <div className="text-ink-500 text-sm">Carregando exames...</div>
       ) : error ? (
-        <div className="bg-red-500/10 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">{error}</div>
+        <div className="bg-rose-50 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">{error}</div>
       ) : items.length === 0 ? (
-        <div className="bg-dark-card border border-gray-800 rounded-2xl p-6 text-center text-gray-500 text-sm">
+        <div className="bg-surface border border-cream-300 rounded-2xl p-6 text-center text-ink-500 text-sm">
           Nenhum pedido de exame registrado ainda.
         </div>
       ) : (
@@ -278,22 +278,22 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
               : null
 
             return (
-              <div key={item.id} className="bg-dark-card border border-gray-800 rounded-2xl p-5 space-y-3">
+              <div key={item.id} className="bg-surface border border-cream-300 rounded-2xl p-5 space-y-3">
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-white font-medium text-sm">{item.tipo ?? '—'}</span>
+                      <span className="text-ink-900 font-medium text-sm">{item.tipo ?? '—'}</span>
                       {item.urgente && (
-                        <span className="inline-flex items-center gap-1 text-xs text-red-400 border border-red-500/30 bg-red-500/10 rounded-lg px-2 py-0.5">
+                        <span className="inline-flex items-center gap-1 text-xs text-red-400 border border-red-500/30 bg-rose-50 rounded-lg px-2 py-0.5">
                           <AlertTriangle className="w-3 h-3" /> Urgente
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-gray-400">
+                    <div className="text-xs text-ink-500">
                       Solicitado em: {formatDate(item.data_solicitacao ?? item.created_at)}
                     </div>
                     {item.data_resultado && (
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-ink-500">
                         Resultado em: {formatDate(item.data_resultado)}
                       </div>
                     )}
@@ -305,18 +305,18 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
                 </div>
 
                 {item.descricao && (
-                  <div className="text-xs text-gray-400">{item.descricao}</div>
+                  <div className="text-xs text-ink-500">{item.descricao}</div>
                 )}
 
                 {/* arquivo anexo */}
                 {item.arquivo_url && (
                   <div className="flex items-center gap-2">
-                    <Paperclip className="w-3.5 h-3.5 text-gray-500" />
+                    <Paperclip className="w-3.5 h-3.5 text-ink-500" />
                     <a
                       href={item.arquivo_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-brand-blue hover:text-blue-400 underline underline-offset-2"
+                      className="text-xs text-navy-500 hover:text-blue-400 underline underline-offset-2"
                     >
                       Ver arquivo anexo
                     </a>
@@ -324,21 +324,21 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
                 )}
 
                 {item.resultado && !isExpandingResult && (
-                  <div className="bg-[#0d1520] border border-gray-700 rounded-xl p-3">
-                    <div className="text-xs text-gray-400 mb-1">Resultado</div>
-                    <div className="text-sm text-white whitespace-pre-wrap">{item.resultado}</div>
+                  <div className="bg-[#0d1520] border border-cream-300 rounded-xl p-3">
+                    <div className="text-xs text-ink-500 mb-1">Resultado</div>
+                    <div className="text-sm text-ink-900 whitespace-pre-wrap">{item.resultado}</div>
                   </div>
                 )}
 
                 {/* status advancement + resultado input */}
                 {canUpdateStatus && item.status !== 'finalizado' && (
-                  <div className="border-t border-gray-800 pt-3 space-y-2">
+                  <div className="border-t border-cream-300 pt-3 space-y-2">
                     {isExpandingResult ? (
                       <div className="space-y-2">
-                        <label className="text-xs text-gray-400 block">Resultado / laudo</label>
+                        <label className="text-xs text-ink-500 block">Resultado / laudo</label>
                         <textarea
                           rows={4}
-                          className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white resize-none"
+                          className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900 resize-none"
                           placeholder="Descreva o resultado do exame..."
                           value={resultadoInput[item.id] ?? item.resultado ?? ''}
                           onChange={(e) => setResultadoInput((prev) => ({ ...prev, [item.id]: e.target.value }))}
@@ -347,7 +347,7 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
                           <button
                             type="button"
                             onClick={() => setExpandedResult(null)}
-                            className="text-xs text-gray-400 hover:text-gray-200"
+                            className="text-xs text-ink-500 hover:text-ink-700"
                           >
                             Cancelar
                           </button>
@@ -355,7 +355,7 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
                             type="button"
                             disabled={isUpdating}
                             onClick={() => updateStatus(item.id, 'resultado_disponivel', resultadoInput[item.id] ?? '')}
-                            className="inline-flex items-center gap-1 text-xs text-brand-blue hover:text-blue-400 disabled:opacity-50"
+                            className="inline-flex items-center gap-1 text-xs text-navy-500 hover:text-blue-400 disabled:opacity-50"
                           >
                             {isUpdating ? 'Salvando...' : 'Salvar resultado'}
                           </button>
@@ -368,7 +368,7 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
                             type="button"
                             disabled={isUpdating}
                             onClick={() => updateStatus(item.id, nextStatus)}
-                            className="inline-flex items-center gap-1 text-xs text-gray-300 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg px-3 py-1.5 disabled:opacity-50"
+                            className="inline-flex items-center gap-1 text-xs text-ink-700 bg-cream-200 hover:bg-gray-700 border border-cream-300 rounded-lg px-3 py-1.5 disabled:opacity-50"
                           >
                             Marcar como: {statusLabels[nextStatus]}
                           </button>
@@ -387,7 +387,7 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
                             type="button"
                             disabled={isUpdating}
                             onClick={() => updateStatus(item.id, 'finalizado')}
-                            className="inline-flex items-center gap-1 text-xs text-green-400 bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 rounded-lg px-3 py-1.5 disabled:opacity-50"
+                            className="inline-flex items-center gap-1 text-xs text-green-400 bg-sage-50 hover:bg-green-500/20 border border-green-500/30 rounded-lg px-3 py-1.5 disabled:opacity-50"
                           >
                             <CheckCircle2 className="w-3.5 h-3.5" /> Finalizar
                           </button>

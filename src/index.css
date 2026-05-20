@@ -1,9 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Courgette&family=Caveat:wght@400;500;600;700&family=Pacifico&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-paper:   246 242 231;   /* #F6F2E7 — RGB triplets for Tailwind alpha */
+    --bg-surface: 251 249 242;   /* #FBF9F2 */
+    --bg-sunken:  239 233 216;   /* #EFE9D8 */
+    --font-display: "Courgette", cursive;
+  }
+
+  [data-theme="dark"] {
+    --bg-paper:   14 26 42;      /* #0E1A2A */
+    --bg-surface: 24 42 63;      /* #182A3F */
+    --bg-sunken:  10 20 34;      /* #0A1422 */
+  }
+
   body {
-    @apply bg-dark-bg text-white font-sans;
+    @apply bg-canvas text-ink-900 font-sans antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    @apply text-ink-900;
   }
 }

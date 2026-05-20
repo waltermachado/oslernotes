@@ -114,8 +114,8 @@ export default function ClinicoAgendaPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight">Agenda Médica</h1>
-            <p className="text-gray-400 text-sm mt-1">{subtitle}</p>
+            <h1 className="font-normal text-ink-900 text-5xl">Agenda Médica</h1>
+            <p className="text-ink-500 text-sm mt-1">{subtitle}</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 justify-start lg:justify-end">
@@ -123,12 +123,12 @@ export default function ClinicoAgendaPage() {
               type="button"
               aria-label="Atualizar agenda"
               onClick={load}
-              className="p-2.5 rounded-xl bg-dark-card border border-gray-800 text-gray-400 hover:text-white hover:bg-gray-800/40 transition-colors"
+              className="p-2.5 rounded-xl bg-surface border border-cream-300 text-ink-500 hover:text-ink-800 hover:bg-cream-200/60 transition-colors"
             >
               <RefreshCcw className={cn('w-4 h-4', loading && 'animate-spin')} />
             </button>
 
-            <div className="flex items-center bg-dark-card border border-gray-800 rounded-xl overflow-hidden">
+            <div className="flex items-center bg-surface border border-cream-300 rounded-xl overflow-hidden">
               <SegmentButton active={mode === 'day'} onClick={() => setMode('day')}>
                 Dia
               </SegmentButton>
@@ -140,12 +140,12 @@ export default function ClinicoAgendaPage() {
               </SegmentButton>
             </div>
 
-            <div className="flex items-center bg-dark-card border border-gray-800 rounded-xl overflow-hidden">
+            <div className="flex items-center bg-surface border border-cream-300 rounded-xl overflow-hidden">
               <IconButton ariaLabel="Anterior" onClick={() => setDate((d) => addDays(d, -1))}>
                 <ChevronLeft className="w-4 h-4" />
               </IconButton>
               <button
-                className="px-4 py-2.5 text-sm font-medium text-gray-200 hover:bg-gray-800/40 transition-colors"
+                className="px-4 py-2.5 text-sm font-medium text-ink-700 hover:bg-cream-200/60 transition-colors"
                 onClick={() => setDate(new Date())}
               >
                 Hoje
@@ -159,20 +159,20 @@ export default function ClinicoAgendaPage() {
 
         <div className="mt-6">
           {error && (
-            <div className="mb-4 bg-red-500/10 border border-red-500/40 text-red-400 px-4 py-3 rounded-2xl text-sm">
+            <div className="mb-4 bg-rose-50 border border-red-500/40 text-red-400 px-4 py-3 rounded-2xl text-sm">
               {error}
             </div>
           )}
           {mode === 'day' ? (
             loading && appointments.length === 0 ? (
-              <div className="bg-dark-card border border-gray-800 rounded-2xl p-10 text-center text-gray-400 text-sm">
+              <div className="bg-surface border border-cream-300 rounded-2xl p-10 text-center text-ink-500 text-sm">
                 Carregando agenda...
               </div>
             ) : (
               <AgendaDayView date={date} now={now} appointments={appointments} />
             )
           ) : (
-            <div className="bg-dark-card border border-gray-800 rounded-2xl p-10 text-center text-gray-300">
+            <div className="bg-surface border border-cream-300 rounded-2xl p-10 text-center text-ink-700">
               Visualização {mode === 'week' ? 'Semanal' : 'Mensal'} em breve.
             </div>
           )}
@@ -189,7 +189,7 @@ function SegmentButton(props: { active: boolean; onClick: () => void; children: 
       onClick={props.onClick}
       className={cn(
         'px-4 py-2 text-sm font-medium transition-colors',
-        props.active ? 'bg-gray-800/60 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800/40',
+        props.active ? 'bg-cream-200/60 text-ink-900' : 'text-ink-500 hover:text-ink-800 hover:bg-cream-200/60',
       )}
     >
       {props.children}
@@ -203,7 +203,7 @@ function IconButton(props: { ariaLabel: string; onClick: () => void; children: R
       type="button"
       aria-label={props.ariaLabel}
       onClick={props.onClick}
-      className="px-3 py-2.5 text-gray-300 hover:bg-gray-800/40 hover:text-white transition-colors"
+      className="px-3 py-2.5 text-ink-700 hover:bg-cream-200/60 hover:text-ink-800 transition-colors"
     >
       {props.children}
     </button>

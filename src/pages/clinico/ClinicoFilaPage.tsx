@@ -108,15 +108,15 @@ export default function ClinicoFilaPage() {
     return (
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Fila</h1>
-          <p className="text-gray-400 text-sm">Atendimentos por ordem de chegada</p>
+          <h1 className="text-2xl font-bold text-ink-900">Fila</h1>
+          <p className="text-ink-500 text-sm">Atendimentos por ordem de chegada</p>
         </div>
         <div className="flex items-center gap-2">
           <button
             className={
               status === 'aguardando'
-                ? 'px-3 py-2 rounded-xl text-sm bg-brand-blue/20 text-white border border-brand-blue/30'
-                : 'px-3 py-2 rounded-xl text-sm bg-dark-card border border-gray-800 text-gray-300 hover:bg-gray-800/40'
+                ? 'px-3 py-2 rounded-xl text-sm bg-navy-500/20 text-ink-900 border border-brand-blue/30'
+                : 'px-3 py-2 rounded-xl text-sm bg-surface border border-cream-300 text-ink-700 hover:bg-cream-200/60'
             }
             onClick={() => setStatus('aguardando')}
             type="button"
@@ -126,8 +126,8 @@ export default function ClinicoFilaPage() {
           <button
             className={
               status === 'em_atendimento'
-                ? 'px-3 py-2 rounded-xl text-sm bg-brand-blue/20 text-white border border-brand-blue/30'
-                : 'px-3 py-2 rounded-xl text-sm bg-dark-card border border-gray-800 text-gray-300 hover:bg-gray-800/40'
+                ? 'px-3 py-2 rounded-xl text-sm bg-navy-500/20 text-ink-900 border border-brand-blue/30'
+                : 'px-3 py-2 rounded-xl text-sm bg-surface border border-cream-300 text-ink-700 hover:bg-cream-200/60'
             }
             onClick={() => setStatus('em_atendimento')}
             type="button"
@@ -137,8 +137,8 @@ export default function ClinicoFilaPage() {
           <button
             className={
               status === 'finalizado'
-                ? 'px-3 py-2 rounded-xl text-sm bg-brand-blue/20 text-white border border-brand-blue/30'
-                : 'px-3 py-2 rounded-xl text-sm bg-dark-card border border-gray-800 text-gray-300 hover:bg-gray-800/40'
+                ? 'px-3 py-2 rounded-xl text-sm bg-navy-500/20 text-ink-900 border border-brand-blue/30'
+                : 'px-3 py-2 rounded-xl text-sm bg-surface border border-cream-300 text-ink-700 hover:bg-cream-200/60'
             }
             onClick={() => setStatus('finalizado')}
             type="button"
@@ -146,7 +146,7 @@ export default function ClinicoFilaPage() {
             Finalizados
           </button>
           <button
-            className="p-2 rounded-xl bg-dark-card border border-gray-800 text-gray-300 hover:bg-gray-800/40"
+            className="p-2 rounded-xl bg-surface border border-cream-300 text-ink-700 hover:bg-cream-200/60"
             onClick={load}
             type="button"
             aria-label="Atualizar"
@@ -161,35 +161,35 @@ export default function ClinicoFilaPage() {
   return (
     <div className="space-y-6">
       {header}
-      {error && <div className="bg-red-500/10 border border-red-500/40 text-red-400 p-3 rounded-xl">{error}</div>}
+      {error && <div className="bg-rose-50 border border-red-500/40 text-red-400 p-3 rounded-xl">{error}</div>}
 
-      <div className="bg-dark-card border border-gray-800/50 rounded-2xl overflow-hidden">
+      <div className="bg-surface border border-cream-300/50 rounded-2xl overflow-hidden">
         {loading ? (
-          <div className="p-6 text-gray-400">Carregando...</div>
+          <div className="p-6 text-ink-500">Carregando...</div>
         ) : items.length === 0 ? (
-          <div className="p-6 text-gray-400">Nenhum atendimento.</div>
+          <div className="p-6 text-ink-500">Nenhum atendimento.</div>
         ) : (
-          <div className="divide-y divide-gray-800/50">
+          <div className="divide-y divide-cream-300/50">
             {items.map((it) => {
               const p = it.pacientes
               return (
                 <div key={it.id} className="p-4 flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-brand-blue/20 flex items-center justify-center overflow-hidden">
-                    <span className="text-brand-blue font-bold">{p?.nome_completo?.slice(0, 1).toUpperCase() ?? '?'}</span>
+                  <div className="w-10 h-10 rounded-full bg-navy-500/20 flex items-center justify-center overflow-hidden">
+                    <span className="text-navy-500 font-bold">{p?.nome_completo?.slice(0, 1).toUpperCase() ?? '?'}</span>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="text-white font-semibold truncate">{p?.nome_completo ?? it.paciente_id}</div>
-                    <div className="text-xs text-gray-400 truncate">
+                    <div className="text-ink-900 font-semibold truncate">{p?.nome_completo ?? it.paciente_id}</div>
+                    <div className="text-xs text-ink-500 truncate">
                       {p?.data_nascimento ? `${calcAge(p.data_nascimento)} anos` : ''}{p?.sexo ? `, ${p.sexo}` : ''}
                     </div>
                   </div>
-                  <div className="text-xs text-gray-500">prio {it.prioridade ?? 0}</div>
+                  <div className="text-xs text-ink-500">prio {it.prioridade ?? 0}</div>
 
                   {role === 'medico' && status === 'aguardando' ? (
                     <div className="flex items-center gap-2">
                       {it.medico_id ? (
                         <button
-                          className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-brand-blue/20 border border-brand-blue/30 text-white"
+                          className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500/20 border border-brand-blue/30 text-ink-900"
                           onClick={() => call(it.id, it.paciente_id)}
                           type="button"
                         >
@@ -198,7 +198,7 @@ export default function ClinicoFilaPage() {
                         </button>
                       ) : (
                         <button
-                          className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/40 border border-gray-800 text-gray-200 hover:bg-gray-900/60"
+                          className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/40 border border-cream-300 text-ink-700 hover:bg-gray-900/60"
                           onClick={() => accept(it.id)}
                           type="button"
                         >
@@ -209,7 +209,7 @@ export default function ClinicoFilaPage() {
                     </div>
                   ) : role === 'medico' && status === 'em_atendimento' ? (
                     <button
-                      className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-brand-blue/20 border border-brand-blue/30 text-white"
+                      className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500/20 border border-brand-blue/30 text-ink-900"
                       onClick={() => {
                         const base = location.pathname.startsWith('/medico') ? '/medico' : '/clinico'
                         navigate(`${base}/prontuarios/${it.paciente_id}`)

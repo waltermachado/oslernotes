@@ -49,35 +49,35 @@ export default function ClinicoLayout(props: { basePath?: string }) {
     if (clinicLoading) {
       return {
         text: 'Carregando…',
-        className: 'bg-gray-500/10 text-gray-300 border border-gray-500/20',
+        className: 'bg-ink-400/10 text-ink-700 border border-gray-500/20',
       }
     }
     if (!clinicId) {
       return {
         text: 'Sem Clínica',
-        className: 'bg-gray-500/10 text-gray-300 border border-gray-500/20',
+        className: 'bg-ink-400/10 text-ink-700 border border-gray-500/20',
       }
     }
     if (!clinic) {
       return {
         text: 'Clínica Desconhecida',
-        className: 'bg-gray-500/10 text-gray-300 border border-gray-500/20',
+        className: 'bg-ink-400/10 text-ink-700 border border-gray-500/20',
       }
     }
     if (clinic.ativa) {
       return {
         text: 'Clínica Ativa',
-        className: 'bg-green-500/10 text-brand-green border border-green-500/20',
+        className: 'bg-sage-50 text-sage-400 border border-sage-100',
       }
     }
     return {
       text: 'Clínica Inativa',
-      className: 'bg-red-500/10 text-red-500 border border-red-500/20',
+      className: 'bg-rose-50 text-rose-400 border border-rose-100',
     }
   }, [clinic, clinicId, clinicLoading])
 
   return (
-    <div className="min-h-screen bg-dark-bg text-white">
+    <div className="min-h-screen bg-canvas text-ink-900">
       <div className="flex min-h-screen">
         <ClinicoSidebar
           role={role}
@@ -87,23 +87,23 @@ export default function ClinicoLayout(props: { basePath?: string }) {
         />
 
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-16 border-b border-gray-800 bg-dark-card/30 backdrop-blur supports-[backdrop-filter]:bg-dark-card/20">
+          <header className="h-16 border-b border-cream-300 bg-surface/30 backdrop-blur supports-[backdrop-filter]:bg-surface/20">
             <div className="h-full px-6 flex items-center gap-4">
               <div className="flex-1 min-w-0">
                 <div className="relative">
                   <input
                     type="text"
                     placeholder="Pesquisar pacientes, prontuários ou horários…"
-                    className="w-full max-w-2xl bg-dark-input border border-gray-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/40 focus:border-brand-blue/60 transition-all"
+                    className="w-full max-w-2xl bg-sunken border border-cream-300 rounded-xl px-4 py-2.5 text-sm text-ink-900 placeholder-ink-500 focus:outline-none focus:ring-2 focus:ring-navy-400/40 focus:border-navy-400/60 transition-all"
                   />
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
-                <button className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/40 transition-colors" aria-label="Notificações">
+                <button className="p-2 rounded-xl text-ink-500 hover:text-ink-800 hover:bg-cream-200/60 transition-colors" aria-label="Notificações">
                   <Bell className="w-5 h-5" />
                 </button>
-                <button className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/40 transition-colors" aria-label="Conta">
+                <button className="p-2 rounded-xl text-ink-500 hover:text-ink-800 hover:bg-cream-200/60 transition-colors" aria-label="Conta">
                   <CircleUserRound className="w-5 h-5" />
                 </button>
               </div>
@@ -115,8 +115,8 @@ export default function ClinicoLayout(props: { basePath?: string }) {
               <button
                 type="button"
                 className={cn(
-                  'bg-brand-blue hover:bg-blue-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors whitespace-nowrap',
-                  clinic && !clinic.ativa ? 'opacity-60 cursor-not-allowed hover:bg-brand-blue' : null,
+                  'bg-navy-500 hover:bg-navy-600 text-ink-900 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors whitespace-nowrap',
+                  clinic && !clinic.ativa ? 'opacity-60 cursor-not-allowed hover:bg-navy-500' : null,
                 )}
                 disabled={!!clinic && !clinic.ativa}
               >

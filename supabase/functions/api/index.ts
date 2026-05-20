@@ -524,8 +524,8 @@ serve(async (req: Request) => {
 
         const fotoUrl = await signedPhotoUrl(admin, patient.foto_path ?? null)
 
-        const isMedico = auth.ctx.role === 'medico'
-        if (isMedico) {
+        const isFullAccess = auth.ctx.role === 'medico' || auth.ctx.role === 'admin'
+        if (isFullAccess) {
           return json(req, 200, {
             patient: {
               id: patient.id,

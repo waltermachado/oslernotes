@@ -23,8 +23,8 @@ export default function BackofficeLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-dark-bg text-white">
-      <header className="bg-dark-card border-b border-gray-800 sticky top-0 z-10">
+    <div className="min-h-screen bg-canvas text-ink-900">
+      <header className="bg-surface border-b border-cream-300 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
@@ -32,20 +32,20 @@ export default function BackofficeLayout() {
             </div>
             <div className="flex flex-col">
               <div className="text-lg font-bold tracking-tight leading-tight">
-                OSLER NOTES <span className="text-gray-500 font-normal">| Backoffice</span>
+                OSLER NOTES <span className="text-ink-500 font-normal">| Backoffice</span>
               </div>
-              <div className="text-xs text-gray-500 leading-tight">Super Admin</div>
+              <div className="text-xs text-ink-500 leading-tight">Super Admin</div>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="text-sm text-right hidden sm:block">
               <p className="font-medium">{user?.nome || 'Super Admin'}</p>
-              <p className="text-gray-400 text-xs">{user?.email}</p>
+              <p className="text-ink-500 text-xs">{user?.email}</p>
             </div>
             <button
               onClick={handleLogout}
-              className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-xl transition-colors"
+              className="p-2 text-ink-500 hover:text-ink-800 hover:bg-cream-200 rounded-xl transition-colors"
               title="Sair"
             >
               <LogOut className="w-5 h-5" />
@@ -55,7 +55,7 @@ export default function BackofficeLayout() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-6">
-        <aside className="bg-dark-card border border-gray-800 rounded-2xl p-3 h-fit">
+        <aside className="bg-surface border border-cream-300 rounded-2xl p-3 h-fit">
           <nav className="space-y-1">
             {navItems.map((item) => (
               <NavLink
@@ -65,8 +65,8 @@ export default function BackofficeLayout() {
                   cn(
                     'flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-colors',
                     isActive
-                      ? 'bg-white/5 text-white border border-gray-800'
-                      : 'text-gray-300 hover:text-white hover:bg-white/5',
+                      ? 'bg-white/5 text-ink-900 border border-cream-300'
+                      : 'text-ink-700 hover:text-ink-800 hover:bg-white/5',
                   )
                 }
               >

@@ -329,22 +329,22 @@ function InlinePagamentoForm({
     <td colSpan={5} className="px-4 py-3 bg-[#0d1520]">
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-gray-400">Valor (R$)</label>
+          <label className="text-xs text-ink-500">Valor (R$)</label>
           <input
             type="text"
             inputMode="decimal"
             value={valor}
             onChange={(e) => setValor(e.target.value)}
             placeholder="0,00"
-            className="w-28 bg-[#111926] border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500"
+            className="w-28 bg-[#111926] border border-cream-300 rounded-lg px-3 py-1.5 text-sm text-ink-900 placeholder-gray-600 focus:outline-none focus:border-blue-500"
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-gray-400">Forma de pagamento</label>
+          <label className="text-xs text-ink-500">Forma de pagamento</label>
           <select
             value={forma}
             onChange={(e) => setForma(e.target.value)}
-            className="bg-[#111926] border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
+            className="bg-[#111926] border border-cream-300 rounded-lg px-3 py-1.5 text-sm text-ink-900 focus:outline-none focus:border-blue-500"
           >
             {FORMAS_PAGAMENTO.map((f) => (
               <option key={f.value} value={f.value}>
@@ -358,13 +358,13 @@ function InlinePagamentoForm({
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium disabled:opacity-50 transition-colors"
+            className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-ink-900 text-sm font-medium disabled:opacity-50 transition-colors"
           >
             {saving ? 'Salvando…' : 'Salvar'}
           </button>
           <button
             onClick={onCancel}
-            className="px-3 py-1.5 rounded-lg border border-gray-700 text-gray-400 hover:text-white text-sm transition-colors"
+            className="px-3 py-1.5 rounded-lg border border-cream-300 text-ink-500 hover:text-ink-800 text-sm transition-colors"
           >
             Cancelar
           </button>
@@ -391,22 +391,22 @@ function SummaryCard({ title, value, icon: Icon, tone, loading }: SummaryCardPro
     tone === 'blue'
       ? 'bg-blue-500/10 text-blue-400'
       : tone === 'green'
-        ? 'bg-green-500/10 text-green-400'
+        ? 'bg-sage-50 text-green-400'
         : tone === 'amber'
           ? 'bg-amber-500/10 text-amber-400'
           : 'bg-purple-500/10 text-purple-400'
 
   return (
-    <div className="bg-[#111926] border border-gray-800 rounded-2xl p-6 hover:border-blue-500/40 transition-colors">
+    <div className="bg-[#111926] border border-cream-300 rounded-2xl p-6 hover:border-blue-500/40 transition-colors">
       <div className={`inline-flex p-3 rounded-xl ${iconCls}`}>
         <Icon className="w-5 h-5" />
       </div>
-      <div className="mt-4 text-sm text-gray-400">{title}</div>
+      <div className="mt-4 text-sm text-ink-500">{title}</div>
       <div className="mt-1">
         {loading ? (
-          <div className="h-8 w-24 rounded-lg bg-gray-800/60 animate-pulse" />
+          <div className="h-8 w-24 rounded-lg bg-cream-200/60 animate-pulse" />
         ) : (
-          <div className="text-2xl font-semibold tracking-tight text-white">{value}</div>
+          <div className="text-2xl font-semibold tracking-tight text-ink-900">{value}</div>
         )}
       </div>
     </div>
@@ -549,12 +549,12 @@ export default function ClinicoFinanceiroPage() {
         {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight text-white">Financeiro</h1>
-            <p className="text-gray-400 text-sm mt-1">Receitas e cobranças da clínica</p>
+            <h1 className="text-3xl font-semibold tracking-tight text-ink-900">Financeiro</h1>
+            <p className="text-ink-500 text-sm mt-1">Receitas e cobranças da clínica</p>
           </div>
 
           {/* Period filter */}
-          <div className="flex rounded-xl bg-[#111926] border border-gray-800 p-1 gap-1">
+          <div className="flex rounded-xl bg-[#111926] border border-cream-300 p-1 gap-1">
             {periodoLabels.map((p) => (
               <button
                 key={p.key}
@@ -562,8 +562,8 @@ export default function ClinicoFinanceiroPage() {
                 className={[
                   'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
                   periodo === p.key
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-400 hover:text-white',
+                    ? 'bg-blue-600 text-ink-900'
+                    : 'text-ink-500 hover:text-ink-800',
                 ].join(' ')}
               >
                 {p.label}
@@ -605,12 +605,12 @@ export default function ClinicoFinanceiroPage() {
         </div>
 
         {/* Chart */}
-        <div className="mt-8 bg-[#111926] border border-gray-800 rounded-2xl p-6">
-          <h2 className="text-base font-semibold text-white mb-4">Receita por período</h2>
+        <div className="mt-8 bg-[#111926] border border-cream-300 rounded-2xl p-6">
+          <h2 className="text-base font-semibold text-ink-900 mb-4">Receita por período</h2>
           {loading ? (
-            <div className="h-48 rounded-xl bg-gray-800/40 animate-pulse" />
+            <div className="h-48 rounded-xl bg-cream-200/60 animate-pulse" />
           ) : rows.length === 0 ? (
-            <div className="h-48 flex items-center justify-center text-gray-500 text-sm">
+            <div className="h-48 flex items-center justify-center text-ink-500 text-sm">
               Nenhuma consulta registrada no período
             </div>
           ) : (
@@ -619,26 +619,26 @@ export default function ClinicoFinanceiroPage() {
         </div>
 
         {/* Table */}
-        <div className="mt-8 bg-[#111926] border border-gray-800 rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-800">
-            <h2 className="text-base font-semibold text-white">Consultas Recentes</h2>
+        <div className="mt-8 bg-[#111926] border border-cream-300 rounded-2xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-cream-300">
+            <h2 className="text-base font-semibold text-ink-900">Consultas Recentes</h2>
           </div>
 
           {loading ? (
             <div className="p-6 space-y-3">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="h-10 rounded-lg bg-gray-800/40 animate-pulse" />
+                <div key={i} className="h-10 rounded-lg bg-cream-200/60 animate-pulse" />
               ))}
             </div>
           ) : rows.length === 0 ? (
-            <div className="px-6 py-12 text-center text-gray-500 text-sm">
+            <div className="px-6 py-12 text-center text-ink-500 text-sm">
               Nenhuma consulta registrada no período
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-gray-500 text-xs border-b border-gray-800 uppercase tracking-wide">
+                  <tr className="text-ink-500 text-xs border-b border-cream-300 uppercase tracking-wide">
                     <th className="px-6 py-3 text-left font-medium">Data</th>
                     <th className="px-6 py-3 text-left font-medium">Paciente</th>
                     <th className="px-6 py-3 text-left font-medium">Médico</th>
@@ -651,24 +651,24 @@ export default function ClinicoFinanceiroPage() {
                   {rows.slice(0, 20).map((row) => (
                     <Fragment key={row.id}>
                       <tr
-                        className="border-b border-gray-800/60 hover:bg-white/[0.02] transition-colors"
+                        className="border-b border-cream-300/60 hover:bg-white/[0.02] transition-colors"
                       >
-                        <td className="px-6 py-3 text-gray-300 whitespace-nowrap">
+                        <td className="px-6 py-3 text-ink-700 whitespace-nowrap">
                           {fmtData(row.scheduled_time)}
                         </td>
-                        <td className="px-6 py-3 text-white">{row.paciente_nome ?? '—'}</td>
-                        <td className="px-6 py-3 text-gray-300">{row.medico_nome ?? '—'}</td>
-                        <td className="px-6 py-3 text-gray-300">{formaPgtoLabel(row.forma_pagamento)}</td>
-                        <td className="px-6 py-3 font-medium text-white whitespace-nowrap">
+                        <td className="px-6 py-3 text-ink-900">{row.paciente_nome ?? '—'}</td>
+                        <td className="px-6 py-3 text-ink-700">{row.medico_nome ?? '—'}</td>
+                        <td className="px-6 py-3 text-ink-700">{formaPgtoLabel(row.forma_pagamento)}</td>
+                        <td className="px-6 py-3 font-medium text-ink-900 whitespace-nowrap">
                           {row.valor_consulta != null ? fmtBRL(row.valor_consulta) : (
-                            <span className="text-gray-500">—</span>
+                            <span className="text-ink-500">—</span>
                           )}
                         </td>
                         <td className="px-6 py-3 text-right">
                           {row.valor_consulta == null && openFormId !== row.id && (
                             <button
                               onClick={() => setOpenFormId(row.id)}
-                              className="text-xs px-3 py-1.5 rounded-lg border border-blue-700 text-blue-400 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors"
+                              className="text-xs px-3 py-1.5 rounded-lg border border-blue-700 text-blue-400 hover:bg-navy-600 hover:text-ink-800 hover:border-blue-600 transition-colors"
                             >
                               Registrar pagamento
                             </button>
@@ -676,7 +676,7 @@ export default function ClinicoFinanceiroPage() {
                         </td>
                       </tr>
                       {openFormId === row.id && (
-                        <tr className="border-b border-gray-800/60">
+                        <tr className="border-b border-cream-300/60">
                           <InlinePagamentoForm
                             atendimentoId={row.id}
                             onSaved={() => {

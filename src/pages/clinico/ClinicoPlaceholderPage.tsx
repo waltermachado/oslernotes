@@ -9,9 +9,9 @@ export default function ClinicoPlaceholderPage(props: { title: string }) {
     <div className="p-6">
       <div className="max-w-6xl">
         <h1 className="text-2xl font-semibold tracking-tight">{props.title}</h1>
-        <p className="text-gray-400 text-sm mt-1">{subtitle}</p>
+        <p className="text-ink-500 text-sm mt-1">{subtitle}</p>
 
-        <div className="mt-6 bg-dark-card border border-gray-800 rounded-2xl p-6 text-gray-300">
+        <div className="mt-6 bg-surface border border-cream-300 rounded-2xl p-6 text-ink-700">
           Em breve.
         </div>
       </div>

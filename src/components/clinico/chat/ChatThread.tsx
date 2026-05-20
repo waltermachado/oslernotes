@@ -21,7 +21,7 @@ export default function ChatThread(props: { contact: ChatContact | null }) {
         <div className="flex-1 flex items-center justify-center px-8">
           <div className="max-w-md text-center">
             <div className="text-xl font-semibold">Mensagens Internas</div>
-            <div className="text-gray-400 text-sm mt-2">Selecione um contato para abrir a conversa.</div>
+            <div className="text-ink-500 text-sm mt-2">Selecione um contato para abrir a conversa.</div>
           </div>
         </div>
       </section>
@@ -30,14 +30,14 @@ export default function ChatThread(props: { contact: ChatContact | null }) {
 
   return (
     <section className="h-full flex flex-col bg-[#141010]/40">
-      <div className="h-16 px-5 flex items-center justify-between border-b border-gray-800">
+      <div className="h-16 px-5 flex items-center justify-between border-b border-cream-300">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-full bg-gray-700/50 flex items-center justify-center text-xs font-semibold text-gray-100">
+          <div className="w-9 h-9 rounded-full bg-gray-700/50 flex items-center justify-center text-xs font-semibold text-ink-900">
             {initials(props.contact.name)}
           </div>
           <div className="min-w-0">
             <div className="text-sm font-semibold truncate">{header?.title}</div>
-            <div className={cn('text-xs', props.contact.online ? 'text-brand-green' : 'text-gray-500')}>{header?.subtitle}</div>
+            <div className={cn('text-xs', props.contact.online ? 'text-sage-400' : 'text-ink-500')}>{header?.subtitle}</div>
           </div>
         </div>
 
@@ -67,33 +67,33 @@ export default function ChatThread(props: { contact: ChatContact | null }) {
         </div>
 
         <div className="mt-6 flex items-center justify-center">
-          <div className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-black/30 border border-gray-800 text-gray-400 text-[11px]">
+          <div className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-black/30 border border-cream-300 text-ink-500 text-[11px]">
             Esta conversa é criptografada e segura dentro do sistema Osler.
           </div>
         </div>
       </div>
 
-      <div className="p-5 border-t border-gray-800">
-        <div className="flex items-center gap-3 bg-[#201a17]/70 border border-gray-800 rounded-2xl px-4 py-3">
+      <div className="p-5 border-t border-cream-300">
+        <div className="flex items-center gap-3 bg-[#201a17]/70 border border-cream-300 rounded-2xl px-4 py-3">
           <input
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Escreva sua mensagem aqui..."
-            className="flex-1 bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none"
+            className="flex-1 bg-transparent text-sm text-ink-900 placeholder-ink-500 focus:outline-none"
           />
-          <button className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors" aria-label="Emoji">
+          <button className="p-2 rounded-xl text-ink-500 hover:text-ink-800 hover:bg-white/5 transition-colors" aria-label="Emoji">
             <Smile className="w-4 h-4" />
           </button>
-          <button className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors" aria-label="Anexar">
+          <button className="p-2 rounded-xl text-ink-500 hover:text-ink-800 hover:bg-white/5 transition-colors" aria-label="Anexar">
             <Paperclip className="w-4 h-4" />
           </button>
-          <button className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors" aria-label="Áudio">
+          <button className="p-2 rounded-xl text-ink-500 hover:text-ink-800 hover:bg-white/5 transition-colors" aria-label="Áudio">
             <Mic className="w-4 h-4" />
           </button>
           <button
             className={cn(
               'w-10 h-10 rounded-xl flex items-center justify-center transition-colors',
-              text.trim() ? 'bg-brand-blue hover:bg-blue-600 text-white' : 'bg-gray-700/40 text-gray-400',
+              text.trim() ? 'bg-navy-500 hover:bg-navy-600 text-ink-900' : 'bg-gray-700/40 text-ink-500',
             )}
             aria-label="Enviar"
             type="button"
@@ -113,7 +113,7 @@ function IconButton(props: { label: string; children: React.ReactNode }) {
     <button
       type="button"
       aria-label={props.label}
-      className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+      className="p-2 rounded-xl text-ink-500 hover:text-ink-800 hover:bg-white/5 transition-colors"
     >
       {props.children}
     </button>
@@ -123,9 +123,9 @@ function IconButton(props: { label: string; children: React.ReactNode }) {
 function DayDivider(props: { label: string }) {
   return (
     <div className="flex items-center gap-4 mb-6">
-      <div className="h-px flex-1 bg-gray-800" />
-      <div className="text-[10px] tracking-[0.2em] text-gray-500 uppercase">{props.label}</div>
-      <div className="h-px flex-1 bg-gray-800" />
+      <div className="h-px flex-1 bg-cream-200" />
+      <div className="text-[10px] tracking-[0.2em] text-ink-500 uppercase">{props.label}</div>
+      <div className="h-px flex-1 bg-cream-200" />
     </div>
   )
 }
@@ -135,7 +135,7 @@ function MessageBubble(props: { message: ChatMessage }) {
   return (
     <div className={cn('flex items-end gap-2', isOut ? 'justify-end' : 'justify-start')}>
       {!isOut ? (
-        <div className="w-7 h-7 rounded-full bg-gray-700/50 flex items-center justify-center text-[10px] font-semibold text-gray-100 shrink-0">
+        <div className="w-7 h-7 rounded-full bg-gray-700/50 flex items-center justify-center text-[10px] font-semibold text-ink-900 shrink-0">
           A
         </div>
       ) : null}
@@ -146,19 +146,19 @@ function MessageBubble(props: { message: ChatMessage }) {
           className={cn(
             'rounded-2xl px-4 py-3 text-sm leading-relaxed',
             isOut
-              ? 'bg-brand-blue text-white rounded-br-md'
-              : 'bg-[#2a221f]/70 text-white border border-gray-800 rounded-bl-md',
+              ? 'bg-navy-500 text-ink-900 rounded-br-md'
+              : 'bg-[#2a221f]/70 text-ink-900 border border-cream-300 rounded-bl-md',
           )}
         >
           {props.message.text}
         </div>
-        <div className={cn('text-[10px] text-gray-500 mt-1', isOut ? 'text-right pr-1' : 'pl-1')}>
+        <div className={cn('text-[10px] text-ink-500 mt-1', isOut ? 'text-right pr-1' : 'pl-1')}>
           {props.message.time}
         </div>
       </div>
 
       {isOut ? (
-        <div className="w-7 h-7 rounded-full bg-gray-700/50 flex items-center justify-center text-[10px] font-semibold text-gray-100 shrink-0">
+        <div className="w-7 h-7 rounded-full bg-gray-700/50 flex items-center justify-center text-[10px] font-semibold text-ink-900 shrink-0">
           EU
         </div>
       ) : null}

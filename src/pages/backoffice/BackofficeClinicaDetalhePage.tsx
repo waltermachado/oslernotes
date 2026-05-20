@@ -124,7 +124,7 @@ export default function BackofficeClinicaDetalhePage() {
 
   if (loading) {
     return (
-      <div className="bg-dark-card border border-gray-800 rounded-2xl p-8">
+      <div className="bg-surface border border-cream-300 rounded-2xl p-8">
         <div className="w-8 h-8 border-4 border-brand-blue/30 border-t-brand-blue rounded-full animate-spin" />
       </div>
     )
@@ -132,8 +132,8 @@ export default function BackofficeClinicaDetalhePage() {
 
   if (!clinic) {
     return (
-      <div className="bg-dark-card border border-gray-800 rounded-2xl p-8">
-        <div className="text-gray-300">Clínica não encontrada.</div>
+      <div className="bg-surface border border-cream-300 rounded-2xl p-8">
+        <div className="text-ink-700">Clínica não encontrada.</div>
         {error && <div className="text-sm text-red-400 mt-2">{error}</div>}
       </div>
     )
@@ -152,7 +152,7 @@ export default function BackofficeClinicaDetalhePage() {
         planLabel={planLabel}
       />
 
-      {error && <div className="bg-red-500/10 border border-red-500/50 text-red-500 text-sm p-4 rounded-xl">{error}</div>}
+      {error && <div className="bg-rose-50 border border-rose-100 text-rose-400 text-sm p-4 rounded-xl">{error}</div>}
 
       <ClinicDetailSummaryCards
         tier={tier}

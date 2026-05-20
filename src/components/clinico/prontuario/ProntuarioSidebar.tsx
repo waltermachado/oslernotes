@@ -79,23 +79,23 @@ export default function ProntuarioSidebar(props: {
 
   return (
     <aside className="lg:col-span-4 space-y-6">
-      <div className="bg-dark-card border border-gray-800 rounded-2xl p-6">
-        <div className="text-sm font-semibold text-white">Alergias & Alertas</div>
+      <div className="bg-surface border border-cream-300 rounded-2xl p-6">
+        <div className="text-sm font-semibold text-ink-900">Alergias & Alertas</div>
         <div className="mt-3 flex flex-wrap gap-2">
           {alergias.length ? (
             alergias.map((a) => (
-              <span key={a} className="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-300 border border-red-500/20">
+              <span key={a} className="px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-red-300 border border-rose-100">
                 {a}
               </span>
             ))
           ) : (
-            <div className="text-sm text-gray-400">Sem alertas registrados.</div>
+            <div className="text-sm text-ink-500">Sem alertas registrados.</div>
           )}
         </div>
       </div>
 
-      <div className="bg-dark-card border border-gray-800 rounded-2xl p-6">
-        <div className="text-sm font-semibold text-white">Condições</div>
+      <div className="bg-surface border border-cream-300 rounded-2xl p-6">
+        <div className="text-sm font-semibold text-ink-900">Condições</div>
         <div className="mt-3 flex flex-wrap gap-2">
           {doencas.length ? (
             doencas.map((d) => (
@@ -104,48 +104,48 @@ export default function ProntuarioSidebar(props: {
               </span>
             ))
           ) : (
-            <div className="text-sm text-gray-400">Sem condições cadastradas.</div>
+            <div className="text-sm text-ink-500">Sem condições cadastradas.</div>
           )}
         </div>
       </div>
 
-      <div className="bg-dark-card border border-gray-800 rounded-2xl p-6">
-        <div className="text-sm font-semibold text-white">Medicações em Uso</div>
+      <div className="bg-surface border border-cream-300 rounded-2xl p-6">
+        <div className="text-sm font-semibold text-ink-900">Medicações em Uso</div>
         <div className="mt-3 space-y-3">
           {meds.length ? (
             meds.map((m, idx) => (
               <div key={idx} className="border-l-2 border-brand-blue/40 pl-3">
-                <div className="text-white text-sm font-semibold">{m.nome}</div>
-                <div className="text-xs text-gray-400">{m.dosagem} • {m.frequencia}</div>
+                <div className="text-ink-900 text-sm font-semibold">{m.nome}</div>
+                <div className="text-xs text-ink-500">{m.dosagem} • {m.frequencia}</div>
               </div>
             ))
           ) : (
-            <div className="text-sm text-gray-400">Sem medicações registradas.</div>
+            <div className="text-sm text-ink-500">Sem medicações registradas.</div>
           )}
         </div>
       </div>
 
-      <div className="bg-dark-card border border-gray-800 rounded-2xl p-6">
-        <div className="text-sm font-semibold text-white">Sinais Vitais</div>
-        <div className="mt-3 text-sm text-gray-400">Sem registros no momento.</div>
+      <div className="bg-surface border border-cream-300 rounded-2xl p-6">
+        <div className="text-sm font-semibold text-ink-900">Sinais Vitais</div>
+        <div className="mt-3 text-sm text-ink-500">Sem registros no momento.</div>
       </div>
 
       {props.role !== 'atendente' ? (
-        <div className="bg-dark-card border border-gray-800 rounded-2xl p-6">
-          <div className="text-sm font-semibold text-white">Auditoria</div>
+        <div className="bg-surface border border-cream-300 rounded-2xl p-6">
+          <div className="text-sm font-semibold text-ink-900">Auditoria</div>
           {auditError ? <div className="mt-3 text-sm text-red-400">{auditError}</div> : null}
           <div className="mt-3 space-y-3">
             {audit.length ? (
               audit.slice(0, 6).map((a) => (
                 <div key={a.id} className="text-sm">
-                  <div className="text-white">{labelForAction(a.action)}</div>
-                  <div className="text-xs text-gray-400">
+                  <div className="text-ink-900">{labelForAction(a.action)}</div>
+                  <div className="text-xs text-ink-500">
                     {new Date(a.created_at).toLocaleString('pt-BR')} • {a.actor?.nome ?? a.actor?.email ?? a.actor_user_id ?? '—'}
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-sm text-gray-400">Sem registros.</div>
+              <div className="text-sm text-ink-500">Sem registros.</div>
             )}
           </div>
         </div>

@@ -160,23 +160,23 @@ function MetricCard({ metric, loading }: { metric: SummaryMetric; loading: boole
 
   const iconTone =
     metric.tone === 'blue'
-      ? 'bg-brand-blue/10 text-brand-blue'
+      ? 'bg-navy-500/10 text-navy-500'
       : metric.tone === 'green'
-        ? 'bg-brand-green/10 text-brand-green'
+        ? 'bg-brand-green/10 text-sage-400'
         : 'bg-amber-500/10 text-amber-500'
 
   return (
-    <div className="bg-dark-card border border-gray-800 rounded-2xl p-6 hover:border-brand-blue/40 transition-colors">
+    <div className="bg-surface border border-cream-300 rounded-2xl p-6 hover:border-brand-blue/40 transition-colors">
       <div className="flex items-start justify-between">
         <div className={cn('p-3 rounded-xl', iconTone)}>
           <Icon className="w-5 h-5" />
         </div>
       </div>
 
-      <div className="mt-4 text-sm text-gray-400">{metric.title}</div>
+      <div className="mt-4 text-sm text-ink-500">{metric.title}</div>
       <div className="mt-1">
         {loading ? (
-          <div className="h-8 w-16 rounded-lg bg-gray-800/60 animate-pulse" />
+          <div className="h-8 w-16 rounded-lg bg-cream-200/60 animate-pulse" />
         ) : (
           <div className="text-2xl font-semibold tracking-tight">{metric.value}</div>
         )}

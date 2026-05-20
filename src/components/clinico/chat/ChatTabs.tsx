@@ -21,14 +21,14 @@ function Tab(props: { active: boolean; onClick: () => void; children: string }) 
       onClick={props.onClick}
       className={cn(
         'relative py-3 text-[11px] tracking-[0.18em] font-semibold uppercase transition-colors',
-        props.active ? 'text-brand-blue' : 'text-gray-400 hover:text-gray-200',
+        props.active ? 'text-navy-500' : 'text-ink-500 hover:text-ink-700',
       )}
     >
       {props.children}
       <span
         className={cn(
           'absolute left-0 right-0 -bottom-px h-0.5 rounded-full transition-opacity',
-          props.active ? 'bg-brand-blue opacity-100' : 'bg-brand-blue opacity-0',
+          props.active ? 'bg-navy-500 opacity-100' : 'bg-navy-500 opacity-0',
         )}
       />
     </button>

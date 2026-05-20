@@ -26,7 +26,7 @@ export default function DashboardRedirect() {
   }, [user, loading, navigate]);
 
   return (
-    <div className="min-h-screen bg-dark-bg flex items-center justify-center">
+    <div className="min-h-screen bg-canvas flex items-center justify-center">
       <div className="w-8 h-8 border-4 border-brand-blue/30 border-t-brand-blue rounded-full animate-spin" />
     </div>
   );

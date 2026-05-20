@@ -150,8 +150,8 @@ export default function ClinicoPacientesPage() {
           data_nascimento: dataNascimento,
           sexo: values.sexo,
           sexualidade: values.sexualidade || null,
-          historico_breve_doencas: values.historico_breve_doencas,
-          queixa_principal: values.queixa_principal,
+          historico_breve_doencas: (values.historico_breve_doencas ?? '').trim().length >= 10 ? values.historico_breve_doencas.trim() : null,
+          queixa_principal: (values.queixa_principal ?? '').trim() || null,
           doencas,
           remedios,
           medicamentos_em_uso: remedios,
@@ -231,11 +231,11 @@ export default function ClinicoPacientesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Pacientes</h1>
-          <p className="text-gray-400 text-sm">Cadastro e prontuário</p>
+          <h1 className="font-normal text-ink-900 text-5xl">Pacientes</h1>
+          <p className="text-ink-500 text-sm">Cadastro e prontuário</p>
         </div>
         <button
-          className="inline-flex items-center gap-2 bg-brand-blue hover:bg-blue-600 text-white px-4 py-2 rounded-xl disabled:opacity-60"
+          className="inline-flex items-center gap-2 bg-navy-500 hover:bg-navy-600 text-ink-900 px-4 py-2 rounded-xl disabled:opacity-60"
           onClick={() => setShowNew(true)}
           disabled={!canCreate}
         >
@@ -244,15 +244,15 @@ export default function ClinicoPacientesPage() {
         </button>
       </div>
 
-      {error && <div className="bg-red-500/10 border border-red-500/40 text-red-400 p-3 rounded-xl">{error}</div>}
+      {error && <div className="bg-rose-50 border border-red-500/40 text-red-400 p-3 rounded-xl">{error}</div>}
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-8 bg-dark-card border border-gray-800/50 rounded-2xl overflow-hidden">
-          <div className="p-4 border-b border-gray-800/50">
+        <div className="lg:col-span-8 bg-surface border border-cream-300/50 rounded-2xl overflow-hidden">
+          <div className="p-4 border-b border-cream-300/50">
             <div className="relative">
-              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-ink-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
-                className="w-full pl-9 pr-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue"
+                className="w-full pl-9 pr-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900 focus:ring-2 focus:ring-navy-400/40 focus:border-navy-400"
                 placeholder="Pesquisar por nome ou CPF..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -260,24 +260,24 @@ export default function ClinicoPacientesPage() {
             </div>
           </div>
 
-          <div className="divide-y divide-gray-800/50">
+          <div className="divide-y divide-cream-300/50">
             {loading ? (
-              <div className="p-6 text-gray-400">Carregando...</div>
+              <div className="p-6 text-ink-500">Carregando...</div>
             ) : filteredItems.length === 0 ? (
-              <div className="p-6 text-gray-400">Nenhum paciente encontrado.</div>
+              <div className="p-6 text-ink-500">Nenhum paciente encontrado.</div>
             ) : (
               filteredItems.map((p) => (
                 <div key={p.id} className="p-4 flex items-center gap-4 hover:bg-gray-900/30">
-                  <div className="w-10 h-10 rounded-full bg-brand-blue/20 flex items-center justify-center overflow-hidden">
-                    {p.foto_url ? <img src={p.foto_url} className="w-full h-full object-cover" /> : <span className="text-brand-blue font-bold">{p.nome_completo.slice(0, 1).toUpperCase()}</span>}
+                  <div className="w-10 h-10 rounded-full bg-navy-500/20 flex items-center justify-center overflow-hidden">
+                    {p.foto_url ? <img src={p.foto_url} className="w-full h-full object-cover" /> : <span className="text-navy-500 font-bold">{p.nome_completo.slice(0, 1).toUpperCase()}</span>}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-white font-semibold truncate">{p.nome_completo}</div>
-                    <div className="text-xs text-gray-400 truncate">{p.cpf ? `CPF: ${p.cpf}` : 'CPF não informado'}</div>
+                    <div className="text-ink-900 font-semibold truncate">{p.nome_completo}</div>
+                    <div className="text-xs text-ink-500 truncate">{p.cpf ? `CPF: ${p.cpf}` : 'CPF não informado'}</div>
                   </div>
-                  <div className="text-xs text-gray-500">{p.updated_at ? new Date(p.updated_at).toLocaleDateString('pt-BR') : ''}</div>
+                  <div className="text-xs text-ink-500">{p.updated_at ? new Date(p.updated_at).toLocaleDateString('pt-BR') : ''}</div>
                   <button
-                    className="text-xs px-3 py-2 rounded-xl bg-gray-900/40 text-gray-200 hover:bg-gray-900/60"
+                    className="text-xs px-3 py-2 rounded-xl bg-gray-900/40 text-ink-700 hover:bg-gray-900/60"
                     onClick={() => navigate(`${basePath}/prontuarios/${p.id}`)}
                     type="button"
                   >
@@ -285,7 +285,7 @@ export default function ClinicoPacientesPage() {
                   </button>
                   {canEnqueue ? (
                     <button
-                      className="text-xs px-3 py-2 rounded-xl bg-brand-blue/20 border border-brand-blue/30 text-white hover:bg-brand-blue/25"
+                      className="text-xs px-3 py-2 rounded-xl bg-navy-500/20 border border-brand-blue/30 text-ink-900 hover:bg-navy-500/25"
                       onClick={() => enqueue(p.id)}
                       type="button"
                     >
@@ -300,15 +300,15 @@ export default function ClinicoPacientesPage() {
 
         <div className="lg:col-span-4">
           {!showNew ? (
-            <div className="bg-dark-card border border-gray-800/50 rounded-2xl p-6 text-gray-400">
+            <div className="bg-surface border border-cream-300/50 rounded-2xl p-6 text-ink-500">
               Selecione um paciente na lista ou clique em “Novo paciente”.
             </div>
           ) : (
-            <div className="bg-dark-card border border-gray-800/50 rounded-2xl overflow-hidden">
-              <div className="p-4 border-b border-gray-800/50 flex items-center justify-between">
-                <div className="text-white font-semibold">Novo paciente</div>
+            <div className="bg-surface border border-cream-300/50 rounded-2xl overflow-hidden">
+              <div className="p-4 border-b border-cream-300/50 flex items-center justify-between">
+                <div className="text-ink-900 font-semibold">Novo paciente</div>
                 <button
-                  className="p-2 rounded-lg hover:bg-gray-900/40 text-gray-300"
+                  className="p-2 rounded-lg hover:bg-gray-900/40 text-ink-700"
                   onClick={() => {
                     setShowNew(false)
                     setPhotoFile(null)
@@ -321,26 +321,26 @@ export default function ClinicoPacientesPage() {
 
               <form className="p-4 space-y-4" onSubmit={form.handleSubmit(onCreate)}>
                 <div>
-                  <label className="text-xs text-gray-400">Nome completo *</label>
+                  <label className="text-xs text-ink-500">Nome completo *</label>
                   <input
-                    className="mt-1 w-full px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white"
+                    className="mt-1 w-full px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900"
                     {...form.register('nome_completo', { required: true, maxLength: 150 })}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-gray-400">Idade *</label>
+                    <label className="text-xs text-ink-500">Idade *</label>
                     <input
                       type="number"
-                      className="mt-1 w-full px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white"
+                      className="mt-1 w-full px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900"
                       {...form.register('idade', { required: true, valueAsNumber: true, min: 0, max: 115 })}
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-gray-400">Sexo *</label>
+                    <label className="text-xs text-ink-500">Sexo *</label>
                     <select
-                      className="mt-1 w-full px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white"
+                      className="mt-1 w-full px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900"
                       {...form.register('sexo', { required: true })}
                     >
                       <option value="Masculino">Masculino</option>
@@ -350,36 +350,36 @@ export default function ClinicoPacientesPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs text-gray-400">Sexualidade (opcional)</label>
+                  <label className="text-xs text-ink-500">Sexualidade (opcional)</label>
                   <input
-                    className="mt-1 w-full px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white"
+                    className="mt-1 w-full px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900"
                     {...form.register('sexualidade')}
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs text-gray-400">Histórico breve de doenças *</label>
+                  <label className="text-xs text-ink-500">Histórico breve de doenças *</label>
                   <textarea
                     rows={3}
-                    className="mt-1 w-full px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white"
+                    className="mt-1 w-full px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900"
                     {...form.register('historico_breve_doencas', { required: true, minLength: 10 })}
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs text-gray-400">Queixa principal *</label>
+                  <label className="text-xs text-ink-500">Queixa principal *</label>
                   <input
-                    className="mt-1 w-full px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white"
+                    className="mt-1 w-full px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900"
                     {...form.register('queixa_principal', { required: true })}
                   />
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between">
-                    <label className="text-xs text-gray-400">Doenças que tem</label>
+                    <label className="text-xs text-ink-500">Doenças que tem</label>
                     <button
                       type="button"
-                      className="text-xs text-brand-blue hover:underline"
+                      className="text-xs text-navy-500 hover:underline"
                       onClick={() => doencasArray.append({ value: '' })}
                     >
                       Adicionar
@@ -389,12 +389,12 @@ export default function ClinicoPacientesPage() {
                     {doencasArray.fields.map((f, idx) => (
                       <div key={f.id} className="flex gap-2">
                         <input
-                          className="flex-1 px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white"
+                          className="flex-1 px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900"
                           {...form.register(`doencas.${idx}.value` as const)}
                         />
                         <button
                           type="button"
-                          className="px-3 py-2 rounded-xl bg-gray-900/40 text-gray-300"
+                          className="px-3 py-2 rounded-xl bg-gray-900/40 text-ink-700"
                           onClick={() => doencasArray.remove(idx)}
                         >
                           <X className="w-4 h-4" />
@@ -406,10 +406,10 @@ export default function ClinicoPacientesPage() {
 
                 <div>
                   <div className="flex items-center justify-between">
-                    <label className="text-xs text-gray-400">Remédios que toma</label>
+                    <label className="text-xs text-ink-500">Remédios que toma</label>
                     <button
                       type="button"
-                      className="text-xs text-brand-blue hover:underline"
+                      className="text-xs text-navy-500 hover:underline"
                       onClick={() => remediosArray.append({ nome: '', dosagem: '', frequencia: '' })}
                     >
                       Adicionar
@@ -420,23 +420,23 @@ export default function ClinicoPacientesPage() {
                       <div key={f.id} className="grid grid-cols-3 gap-2">
                         <input
                           placeholder="Nome"
-                          className="px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white"
+                          className="px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900"
                           {...form.register(`remedios.${idx}.nome` as const)}
                         />
                         <input
                           placeholder="Dosagem"
-                          className="px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white"
+                          className="px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900"
                           {...form.register(`remedios.${idx}.dosagem` as const)}
                         />
                         <div className="flex gap-2">
                           <input
                             placeholder="Frequência"
-                            className="flex-1 px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white"
+                            className="flex-1 px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900"
                             {...form.register(`remedios.${idx}.frequencia` as const)}
                           />
                           <button
                             type="button"
-                            className="px-3 py-2 rounded-xl bg-gray-900/40 text-gray-300"
+                            className="px-3 py-2 rounded-xl bg-gray-900/40 text-ink-700"
                             onClick={() => remediosArray.remove(idx)}
                           >
                             <X className="w-4 h-4" />
@@ -448,35 +448,35 @@ export default function ClinicoPacientesPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs text-gray-400">Futuras anotações médicas</label>
+                  <label className="text-xs text-ink-500">Futuras anotações médicas</label>
                   <textarea
                     rows={3}
-                    className="mt-1 w-full px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white"
+                    className="mt-1 w-full px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900"
                     {...form.register('futuras_anotacoes')}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-gray-400">CPF (opcional)</label>
+                    <label className="text-xs text-ink-500">CPF (opcional)</label>
                     <input
-                      className="mt-1 w-full px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white"
+                      className="mt-1 w-full px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900"
                       value={maskCpf(form.watch('cpf') ?? '')}
                       onChange={(e) => form.setValue('cpf', e.target.value)}
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-gray-400">Telefone (opcional)</label>
+                    <label className="text-xs text-ink-500">Telefone (opcional)</label>
                     <input
-                      className="mt-1 w-full px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white"
+                      className="mt-1 w-full px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900"
                       {...form.register('telefone')}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs text-gray-400">Foto (opcional)</label>
-                  <label className="mt-1 flex items-center gap-2 px-3 py-2 bg-dark-input border border-gray-800 rounded-xl text-sm text-white cursor-pointer">
+                  <label className="text-xs text-ink-500">Foto (opcional)</label>
+                  <label className="mt-1 flex items-center gap-2 px-3 py-2 bg-sunken border border-cream-300 rounded-xl text-sm text-ink-900 cursor-pointer">
                     <Upload className="w-4 h-4" />
                     <span className="flex-1 truncate">{photoFile ? photoFile.name : 'Enviar foto (JPG/PNG até 10MB)'}</span>
                     <input
@@ -491,7 +491,7 @@ export default function ClinicoPacientesPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-brand-blue hover:bg-blue-600 text-white font-semibold py-2 rounded-xl disabled:opacity-60"
+                  className="w-full bg-navy-500 hover:bg-navy-600 text-ink-900 font-semibold py-2 rounded-xl disabled:opacity-60"
                 >
                   {submitting ? 'Salvando...' : 'Salvar paciente'}
                 </button>

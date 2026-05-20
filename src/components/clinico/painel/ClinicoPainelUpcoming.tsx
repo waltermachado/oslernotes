@@ -111,10 +111,10 @@ export default function ClinicoPainelUpcoming() {
   }
 
   return (
-    <section className="bg-dark-card border border-gray-800 rounded-2xl overflow-hidden">
-      <div className="px-6 py-5 border-b border-gray-800 flex items-center justify-between gap-4">
+    <section className="bg-surface border border-cream-300 rounded-2xl overflow-hidden">
+      <div className="px-6 py-5 border-b border-cream-300 flex items-center justify-between gap-4">
         <div className="text-lg font-semibold tracking-tight">Próximos Pacientes</div>
-        <Link to={`${basePath}/agenda`} className="text-sm font-semibold text-brand-blue hover:text-blue-400 transition-colors">
+        <Link to={`${basePath}/agenda`} className="text-sm font-semibold text-navy-500 hover:text-blue-400 transition-colors">
           Ver agenda completa
         </Link>
       </div>
@@ -122,14 +122,14 @@ export default function ClinicoPainelUpcoming() {
       <div className="overflow-x-auto">
         <table className="w-full text-left">
           <thead>
-            <tr className="text-[11px] uppercase tracking-[0.18em] text-gray-500 bg-black/20">
+            <tr className="text-[11px] uppercase tracking-[0.18em] text-ink-500 bg-black/20">
               <th className="px-6 py-4 font-semibold">Horário</th>
               <th className="px-6 py-4 font-semibold">Paciente</th>
               <th className="px-6 py-4 font-semibold">Status</th>
               <th className="px-6 py-4 font-semibold">Ação</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-cream-300">
             {!loading && error && items.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-6 py-4 text-center text-amber-400 text-sm">
@@ -139,14 +139,14 @@ export default function ClinicoPainelUpcoming() {
             )}
             {loading && items.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-6 py-4 text-center text-gray-400 text-sm">
+                <td colSpan={4} className="px-6 py-4 text-center text-ink-500 text-sm">
                   Carregando...
                 </td>
               </tr>
             )}
             {!loading && !error && items.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-6 py-4 text-center text-gray-500 text-sm">
+                <td colSpan={4} className="px-6 py-4 text-center text-ink-500 text-sm">
                   Nenhum paciente agendado ou aguardando.
                 </td>
               </tr>
@@ -177,13 +177,13 @@ export default function ClinicoPainelUpcoming() {
 
               return (
                 <tr key={r.id} className="hover:bg-white/5 transition-colors">
-                  <td className="px-6 py-4 text-sm font-semibold text-brand-blue w-[110px]">{timeStr}</td>
+                  <td className="px-6 py-4 text-sm font-semibold text-navy-500 w-[110px]">{timeStr}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-gray-700/50 flex items-center justify-center text-xs font-semibold text-gray-100">
+                      <div className="h-8 w-8 rounded-full bg-gray-700/50 flex items-center justify-center text-xs font-semibold text-ink-900">
                         {initials}
                       </div>
-                      <div className="text-sm text-gray-100 font-medium truncate max-w-[220px]">{patientName}</div>
+                      <div className="text-sm text-ink-900 font-medium truncate max-w-[220px]">{patientName}</div>
                     </div>
                   </td>
                   <td className="px-6 py-4 w-[140px]">
@@ -195,14 +195,14 @@ export default function ClinicoPainelUpcoming() {
                     {sClass === 'PRESENTE' && isMedico ? (
                       <button
                         onClick={() => handleCall(r)}
-                        className="inline-flex items-center justify-center px-3 py-1.5 bg-brand-blue text-white text-xs font-semibold rounded-lg hover:bg-blue-600 transition-colors"
+                        className="inline-flex items-center justify-center px-3 py-1.5 bg-navy-500 text-ink-900 text-xs font-semibold rounded-lg hover:bg-navy-600 transition-colors"
                       >
                         Atender
                       </button>
                     ) : (
                       <Link
                         to={`${basePath}/prontuarios/${r.paciente_id}`}
-                        className="inline-flex items-center justify-center px-3 py-1.5 border border-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-800/40 transition-colors text-gray-300"
+                        className="inline-flex items-center justify-center px-3 py-1.5 border border-cream-300 text-xs font-semibold rounded-lg hover:bg-cream-200/60 transition-colors text-ink-700"
                       >
                         Prontuário
                       </Link>
@@ -219,9 +219,9 @@ export default function ClinicoPainelUpcoming() {
 }
 
 function badgeClass(status: BadgeStatus) {
-  if (status === 'PRESENTE') return 'bg-brand-green/10 text-brand-green'
+  if (status === 'PRESENTE') return 'bg-brand-green/10 text-sage-400'
   if (status === 'ATRASADO') return 'bg-amber-500/10 text-amber-500'
-  return 'bg-brand-blue/10 text-brand-blue'
+  return 'bg-navy-500/10 text-navy-500'
 }
 
 function isTodayLocal(date: Date) {

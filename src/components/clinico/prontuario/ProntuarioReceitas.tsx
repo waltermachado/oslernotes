@@ -37,9 +37,9 @@ const statusLabels: Record<string, string> = {
 }
 
 const statusColors: Record<string, string> = {
-  rascunho: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10',
-  emitida: 'text-green-400 border-green-500/30 bg-green-500/10',
-  cancelada: 'text-red-400 border-red-500/30 bg-red-500/10',
+  rascunho: 'text-yellow-400 border-yellow-500/30 bg-clay-50',
+  emitida: 'text-green-400 border-green-500/30 bg-sage-50',
+  cancelada: 'text-red-400 border-red-500/30 bg-rose-50',
 }
 
 export default function ProntuarioReceitas({ patientId, token, role }: Props) {
@@ -146,12 +146,12 @@ export default function ProntuarioReceitas({ patientId, token, role }: Props) {
     <section className="space-y-6">
       {/* header */}
       <div className="flex items-center justify-between">
-        <div className="text-xs font-semibold tracking-[0.2em] uppercase text-gray-400">Receitas</div>
+        <div className="text-xs font-semibold tracking-[0.2em] uppercase text-ink-500">Receitas</div>
         {canCreate && !showForm && (
           <button
             type="button"
             onClick={() => setShowForm(true)}
-            className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-brand-blue hover:bg-blue-600 text-white text-sm"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-ink-900 text-sm"
           >
             <Plus className="w-4 h-4" />
             Nova Receita
@@ -161,11 +161,11 @@ export default function ProntuarioReceitas({ patientId, token, role }: Props) {
 
       {/* inline form */}
       {showForm && (
-        <div className="bg-dark-card border border-gray-800 rounded-2xl p-5 space-y-5">
-          <div className="text-sm font-medium text-gray-200">Nova Receita</div>
+        <div className="bg-surface border border-cream-300 rounded-2xl p-5 space-y-5">
+          <div className="text-sm font-medium text-ink-700">Nova Receita</div>
 
           {formError && (
-            <div className="bg-red-500/10 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">
+            <div className="bg-rose-50 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">
               {formError}
             </div>
           )}
@@ -173,9 +173,9 @@ export default function ProntuarioReceitas({ patientId, token, role }: Props) {
           {/* tipo + status */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs text-gray-400 block mb-1">Tipo de receita</label>
+              <label className="text-xs text-ink-500 block mb-1">Tipo de receita</label>
               <select
-                className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white"
+                className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900"
                 value={tipo}
                 onChange={(e) => setTipo(e.target.value)}
               >
@@ -185,9 +185,9 @@ export default function ProntuarioReceitas({ patientId, token, role }: Props) {
               </select>
             </div>
             <div>
-              <label className="text-xs text-gray-400 block mb-1">Status</label>
+              <label className="text-xs text-ink-500 block mb-1">Status</label>
               <select
-                className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white"
+                className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900"
                 value={status}
                 onChange={(e) => setStatus(e.target.value as 'rascunho' | 'emitida')}
               >
@@ -200,9 +200,9 @@ export default function ProntuarioReceitas({ patientId, token, role }: Props) {
           {/* medicamentos */}
           <div className="space-y-3">
             {medicamentos.map((med, idx) => (
-              <div key={idx} className="bg-[#0d1520] border border-gray-700 rounded-xl p-4 space-y-3">
+              <div key={idx} className="bg-[#0d1520] border border-cream-300 rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-gray-400">Medicamento {idx + 1}</span>
+                  <span className="text-xs font-medium text-ink-500">Medicamento {idx + 1}</span>
                   {medicamentos.length > 1 && (
                     <button
                       type="button"
@@ -216,50 +216,50 @@ export default function ProntuarioReceitas({ patientId, token, role }: Props) {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-gray-400 block mb-1">Nome *</label>
+                    <label className="text-xs text-ink-500 block mb-1">Nome *</label>
                     <input
                       type="text"
-                      className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white"
+                      className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900"
                       placeholder="Ex: Amoxicilina"
                       value={med.nome}
                       onChange={(e) => updateMed(idx, 'nome', e.target.value)}
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-gray-400 block mb-1">Dosagem *</label>
+                    <label className="text-xs text-ink-500 block mb-1">Dosagem *</label>
                     <input
                       type="text"
-                      className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white"
+                      className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900"
                       placeholder="Ex: 500mg"
                       value={med.dosagem}
                       onChange={(e) => updateMed(idx, 'dosagem', e.target.value)}
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-gray-400 block mb-1">Frequência *</label>
+                    <label className="text-xs text-ink-500 block mb-1">Frequência *</label>
                     <input
                       type="text"
-                      className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white"
+                      className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900"
                       placeholder="Ex: 8 em 8 horas"
                       value={med.frequencia}
                       onChange={(e) => updateMed(idx, 'frequencia', e.target.value)}
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-gray-400 block mb-1">Quantidade</label>
+                    <label className="text-xs text-ink-500 block mb-1">Quantidade</label>
                     <input
                       type="text"
-                      className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white"
+                      className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900"
                       placeholder="Ex: 21 comprimidos"
                       value={med.quantidade ?? ''}
                       onChange={(e) => updateMed(idx, 'quantidade', e.target.value)}
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="text-xs text-gray-400 block mb-1">Instruções de uso</label>
+                    <label className="text-xs text-ink-500 block mb-1">Instruções de uso</label>
                     <input
                       type="text"
-                      className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white"
+                      className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900"
                       placeholder="Ex: Tomar após as refeições"
                       value={med.instrucoes ?? ''}
                       onChange={(e) => updateMed(idx, 'instrucoes', e.target.value)}
@@ -272,7 +272,7 @@ export default function ProntuarioReceitas({ patientId, token, role }: Props) {
             <button
               type="button"
               onClick={addMed}
-              className="inline-flex items-center gap-1 text-sm text-brand-blue hover:text-blue-400"
+              className="inline-flex items-center gap-1 text-sm text-navy-500 hover:text-blue-400"
             >
               <Plus className="w-4 h-4" />
               Adicionar medicamento
@@ -280,10 +280,10 @@ export default function ProntuarioReceitas({ patientId, token, role }: Props) {
           </div>
 
           <div>
-            <label className="text-xs text-gray-400 block mb-1">Instruções gerais (opcional)</label>
+            <label className="text-xs text-ink-500 block mb-1">Instruções gerais (opcional)</label>
             <textarea
               rows={2}
-              className="w-full bg-dark-input border border-gray-800 rounded-xl px-3 py-2 text-sm text-white resize-none"
+              className="w-full bg-sunken border border-cream-300 rounded-xl px-3 py-2 text-sm text-ink-900 resize-none"
               placeholder="Orientações gerais ao paciente..."
               value={instrucoes}
               onChange={(e) => setInstrucoes(e.target.value)}
@@ -295,7 +295,7 @@ export default function ProntuarioReceitas({ patientId, token, role }: Props) {
               type="button"
               onClick={resetForm}
               disabled={saving}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/40 border border-gray-800 text-gray-200 hover:bg-gray-900/60 text-sm"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/40 border border-cream-300 text-ink-700 hover:bg-gray-900/60 text-sm"
             >
               <X className="w-4 h-4" />
               Cancelar
@@ -304,7 +304,7 @@ export default function ProntuarioReceitas({ patientId, token, role }: Props) {
               type="button"
               onClick={onSave}
               disabled={saving}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-brand-blue hover:bg-blue-600 text-white disabled:opacity-60 text-sm"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-ink-900 disabled:opacity-60 text-sm"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Salvando...' : 'Salvar Receita'}
@@ -315,11 +315,11 @@ export default function ProntuarioReceitas({ patientId, token, role }: Props) {
 
       {/* list */}
       {loading ? (
-        <div className="text-gray-400 text-sm">Carregando receitas...</div>
+        <div className="text-ink-500 text-sm">Carregando receitas...</div>
       ) : error ? (
-        <div className="bg-red-500/10 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">{error}</div>
+        <div className="bg-rose-50 border border-red-500/40 text-red-400 p-3 rounded-xl text-sm">{error}</div>
       ) : items.length === 0 ? (
-        <div className="bg-dark-card border border-gray-800 rounded-2xl p-6 text-center text-gray-500 text-sm">
+        <div className="bg-surface border border-cream-300 rounded-2xl p-6 text-center text-ink-500 text-sm">
           Nenhuma receita registrada ainda.
         </div>
       ) : (
@@ -327,12 +327,12 @@ export default function ProntuarioReceitas({ patientId, token, role }: Props) {
           {items.map((item) => {
             const statusKey = item.status ?? 'rascunho'
             return (
-              <div key={item.id} className="bg-dark-card border border-gray-800 rounded-2xl p-5 space-y-4">
+              <div key={item.id} className="bg-surface border border-cream-300 rounded-2xl p-5 space-y-4">
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div className="space-y-0.5">
-                    <div className="text-xs text-gray-400">{formatDate(item.created_at)}</div>
+                    <div className="text-xs text-ink-500">{formatDate(item.created_at)}</div>
                     {item.tipo && (
-                      <div className="text-xs text-gray-500">Tipo: {item.tipo}</div>
+                      <div className="text-xs text-ink-500">Tipo: {item.tipo}</div>
                     )}
                   </div>
                   <span className={`shrink-0 text-xs border rounded-lg px-2 py-0.5 ${statusColors[statusKey] ?? ''}`}>
@@ -343,20 +343,20 @@ export default function ProntuarioReceitas({ patientId, token, role }: Props) {
                 <div className="space-y-2">
                   {(item.medicamentos ?? []).map((med, idx) => (
                     <div key={idx} className="border-l-2 border-brand-blue pl-3">
-                      <div className="text-white font-medium text-sm">{med.nome}</div>
-                      <div className="text-gray-400 text-xs">
+                      <div className="text-ink-900 font-medium text-sm">{med.nome}</div>
+                      <div className="text-ink-500 text-xs">
                         {med.dosagem} • {med.frequencia}
                         {med.quantidade ? ` • ${med.quantidade}` : ''}
                       </div>
                       {med.instrucoes && (
-                        <div className="text-gray-500 text-xs mt-0.5">{med.instrucoes}</div>
+                        <div className="text-ink-500 text-xs mt-0.5">{med.instrucoes}</div>
                       )}
                     </div>
                   ))}
                 </div>
 
                 {getInstrucoes(item) && (
-                  <div className="text-xs text-gray-400 border-t border-gray-800 pt-3">
+                  <div className="text-xs text-ink-500 border-t border-cream-300 pt-3">
                     Instruções: {getInstrucoes(item)}
                   </div>
                 )}

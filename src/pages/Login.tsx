@@ -40,23 +40,23 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-dark-bg flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-canvas flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
         
         {/* Header */}
         <div className="flex flex-col items-center mb-8">
           <BrandLogo className="h-[60px] w-auto max-w-[200px] mb-4" />
-          <h1 className="text-3xl font-bold text-white mb-1 tracking-tight">OSLER NOTES</h1>
-          <h2 className="text-brand-green font-medium text-sm tracking-[0.2em] mb-3">HEALTH SYSTEM</h2>
-          <p className="text-gray-400 text-sm text-center">Portal Seguro para Profissionais de Saúde</p>
+          <h1 className="font-normal text-ink-900 mb-1" style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', lineHeight: 1 }}>Osler Notes</h1>
+          <h2 className="text-gold-500 font-sans font-bold text-xs tracking-[0.22em] uppercase mb-3">Health System</h2>
+          <p className="text-ink-500 text-sm text-center">Portal Seguro para Profissionais de Saúde</p>
         </div>
 
         {/* Card */}
-        <div className="bg-dark-card rounded-2xl shadow-xl border border-gray-800/50 p-8">
+        <div className="bg-surface rounded-2xl shadow-xl border border-cream-300/50 p-8">
           <form onSubmit={handleLogin} className="space-y-6">
             
             {error && (
-              <div className="bg-red-500/10 border border-red-500/50 text-red-500 text-sm p-3 rounded-lg text-center">
+              <div className="bg-rose-50 border border-rose-100 text-rose-400 text-sm p-3 rounded-lg text-center">
                 {error}
               </div>
             )}
@@ -65,14 +65,14 @@ export default function Login() {
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-500" />
+                  <User className="h-5 w-5 text-ink-500" />
                 </div>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="E-mail ou CPF"
-                  className="w-full pl-11 pr-4 py-3 bg-dark-input border border-gray-800 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-sunken border border-cream-300 rounded-xl text-ink-900 placeholder-ink-500 focus:outline-none focus:ring-2 focus:ring-navy-400/40 focus:border-navy-400 transition-all"
                   required
                 />
               </div>
@@ -82,20 +82,20 @@ export default function Login() {
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-500" />
+                  <Lock className="h-5 w-5 text-ink-500" />
                 </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Senha"
-                  className="w-full pl-11 pr-12 py-3 bg-dark-input border border-gray-800 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all"
+                  className="w-full pl-11 pr-12 py-3 bg-sunken border border-cream-300 rounded-xl text-ink-900 placeholder-ink-500 focus:outline-none focus:ring-2 focus:ring-navy-400/40 focus:border-navy-400 transition-all"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-300 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-ink-500 hover:text-ink-700 transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -105,10 +105,10 @@ export default function Login() {
             {/* Options */}
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center space-x-2 cursor-pointer group">
-                <input type="checkbox" className="rounded border-gray-700 bg-dark-input text-brand-blue focus:ring-brand-blue/50" />
-                <span className="text-gray-400 group-hover:text-gray-300 transition-colors">Lembrar de mim</span>
+                <input type="checkbox" className="rounded border-cream-300 bg-sunken text-navy-500 focus:ring-navy-400/40" />
+                <span className="text-ink-500 group-hover:text-ink-700 transition-colors">Lembrar de mim</span>
               </label>
-              <Link to="/forgot-password" className="text-brand-blue hover:text-blue-400 transition-colors">
+              <Link to="/forgot-password" className="text-navy-500 hover:text-blue-400 transition-colors">
                 Esqueceu a senha?
               </Link>
             </div>
@@ -117,7 +117,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-brand-blue hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-xl flex items-center justify-center space-x-2 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-navy-500 hover:bg-navy-600 text-cream-50 font-medium py-3 px-4 rounded-xl flex items-center justify-center space-x-2 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -131,14 +131,14 @@ export default function Login() {
           </form>
 
           {/* Footer Badges */}
-          <div className="mt-8 pt-6 border-t border-gray-800/50 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-gray-400">
+          <div className="mt-8 pt-6 border-t border-cream-300/50 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-ink-500">
             <div className="flex items-center space-x-1.5">
-              <CheckCircle2 className="h-4 w-4 text-brand-green" />
+              <CheckCircle2 className="h-4 w-4 text-sage-400" />
               <span>Autenticação 2FA ativa</span>
             </div>
             <div className="hidden sm:block w-1 h-1 bg-gray-700 rounded-full" />
             <div className="flex items-center space-x-1.5">
-              <CheckCircle2 className="h-4 w-4 text-brand-green" />
+              <CheckCircle2 className="h-4 w-4 text-sage-400" />
               <span>Em conformidade LGPD / HIPAA</span>
             </div>
           </div>
@@ -146,7 +146,7 @@ export default function Login() {
 
         {/* Page Footer */}
         <div className="mt-8 text-center">
-          <p className="text-[10px] text-gray-500 uppercase tracking-widest">
+          <p className="text-[10px] text-ink-500 uppercase tracking-widest">
             © {new Date().getFullYear()} OSLER NOTES. TODOS OS DIREITOS RESERVADOS.
           </p>
         </div>

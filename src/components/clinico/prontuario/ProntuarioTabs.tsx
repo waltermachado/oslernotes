@@ -24,8 +24,8 @@ export default function ProntuarioTabs(props: {
           className={cn(
             'px-3 py-2 rounded-xl text-sm font-medium border transition-colors',
             props.active === k
-              ? 'bg-brand-blue/15 border-brand-blue/30 text-white'
-              : 'bg-gray-900/30 border-gray-800 text-gray-300 hover:bg-gray-900/50',
+              ? 'bg-navy-500/15 border-brand-blue/30 text-ink-900'
+              : 'bg-gray-900/30 border-cream-300 text-ink-700 hover:bg-gray-900/50',
           )}
         >
           {TAB_LABEL[k]}

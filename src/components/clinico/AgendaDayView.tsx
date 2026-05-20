@@ -21,13 +21,13 @@ export default function AgendaDayView(props: {
   const markerLabel = formatTime(props.now)
 
   return (
-    <div className="bg-dark-card border border-gray-800 rounded-2xl overflow-hidden">
+    <div className="bg-surface border border-cream-300 rounded-2xl overflow-hidden">
       <div className="grid grid-cols-[56px_1fr] sm:grid-cols-[72px_1fr]">
-        <div className="h-14 border-b border-gray-800 bg-dark-card/30" />
-        <div className="h-14 border-b border-gray-800 bg-dark-card/30 flex items-center px-6">
+        <div className="h-14 border-b border-cream-300 bg-surface/30" />
+        <div className="h-14 border-b border-cream-300 bg-surface/30 flex items-center px-6">
           <div className="flex items-baseline gap-2">
-            <div className="text-lg font-semibold tracking-tight text-white">{todayLabel.day}</div>
-            <div className="text-xs text-gray-400 uppercase tracking-[0.18em]">{todayLabel.weekday}</div>
+            <div className="text-lg font-semibold tracking-tight text-ink-900">{todayLabel.day}</div>
+            <div className="text-xs text-ink-500 uppercase tracking-[0.18em]">{todayLabel.weekday}</div>
           </div>
         </div>
 
@@ -35,10 +35,10 @@ export default function AgendaDayView(props: {
           {hours.map((h) => (
             <div
               key={h}
-              className="absolute left-0 right-0 border-b border-gray-800/70"
+              className="absolute left-0 right-0 border-b border-cream-300/70"
               style={{ top: (h - startHour) * rowHeight, height: rowHeight }}
             >
-              <div className="h-full flex items-start justify-end pr-3 pt-3 text-xs text-gray-500 tabular-nums">
+              <div className="h-full flex items-start justify-end pr-3 pt-3 text-xs text-ink-500 tabular-nums">
                 {formatHour(h)}
               </div>
             </div>
@@ -49,7 +49,7 @@ export default function AgendaDayView(props: {
           {hours.map((h) => (
             <div
               key={h}
-              className="absolute left-0 right-0 border-b border-gray-800/70"
+              className="absolute left-0 right-0 border-b border-cream-300/70"
               style={{ top: (h - startHour) * rowHeight, height: rowHeight }}
             />
           ))}
@@ -60,7 +60,7 @@ export default function AgendaDayView(props: {
                 className="absolute left-0 right-0 border-t border-brand-blue/60 pointer-events-none z-0"
                 style={{ top: markerTop }}
               >
-                <span className="absolute -left-12 sm:-left-16 -top-3 bg-brand-blue text-white text-[10px] font-semibold px-2 py-1 rounded-md tabular-nums shadow-sm z-20">
+                <span className="absolute -left-12 sm:-left-16 -top-3 bg-navy-500 text-ink-900 text-[10px] font-semibold px-2 py-1 rounded-md tabular-nums shadow-sm z-20">
                   {markerLabel}
                 </span>
               </div>
@@ -81,7 +81,7 @@ export default function AgendaDayView(props: {
           </div>
 
           <div
-            className={cn('absolute left-0 right-0', 'border-t border-gray-800/70')}
+            className={cn('absolute left-0 right-0', 'border-t border-cream-300/70')}
             style={{ top: 0 }}
           />
         </div>
