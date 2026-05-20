@@ -235,7 +235,7 @@ export default function ClinicoPacientesPage() {
           <p className="text-ink-500 text-sm">Cadastro e prontuário</p>
         </div>
         <button
-          className="inline-flex items-center gap-2 bg-navy-500 hover:bg-navy-600 text-ink-900 px-4 py-2 rounded-xl disabled:opacity-60"
+          className="inline-flex items-center gap-2 bg-navy-500 hover:bg-navy-600 text-cream-50 px-4 py-2 rounded-xl disabled:opacity-60"
           onClick={() => setShowNew(true)}
           disabled={!canCreate}
         >
@@ -285,7 +285,7 @@ export default function ClinicoPacientesPage() {
                   </button>
                   {canEnqueue ? (
                     <button
-                      className="text-xs px-3 py-2 rounded-xl bg-navy-500/20 border border-brand-blue/30 text-ink-900 hover:bg-navy-500/25"
+                      className="text-xs px-3 py-2 rounded-xl bg-navy-500/20 border border-navy-300 text-ink-900 hover:bg-navy-500/25"
                       onClick={() => enqueue(p.id)}
                       type="button"
                     >
@@ -491,7 +491,7 @@ export default function ClinicoPacientesPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-navy-500 hover:bg-navy-600 text-ink-900 font-semibold py-2 rounded-xl disabled:opacity-60"
+                  className="w-full bg-navy-500 hover:bg-navy-600 text-cream-50 font-semibold py-2 rounded-xl disabled:opacity-60"
                 >
                   {submitting ? 'Salvando...' : 'Salvar paciente'}
                 </button>

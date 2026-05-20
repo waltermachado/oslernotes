@@ -165,7 +165,7 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
           <button
             type="button"
             onClick={() => setShowForm(true)}
-            className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-ink-900 text-sm"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-cream-50 text-sm"
           >
             <Plus className="w-4 h-4" />
             Novo Pedido
@@ -199,7 +199,7 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <div
                   onClick={() => setUrgente((v) => !v)}
-                  className={`w-10 h-6 rounded-full transition-colors cursor-pointer ${urgente ? 'bg-red-500' : 'bg-gray-700'} relative`}
+                  className={`w-10 h-6 rounded-full transition-colors cursor-pointer ${urgente ? 'bg-red-500' : 'bg-cream-300'} relative`}
                 >
                   <span
                     className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${urgente ? 'translate-x-4' : ''}`}
@@ -243,7 +243,7 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
               type="button"
               onClick={onSave}
               disabled={saving}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-ink-900 disabled:opacity-60 text-sm"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-cream-50 disabled:opacity-60 text-sm"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Salvando...' : 'Salvar Pedido'}
@@ -368,7 +368,7 @@ export default function ProntuarioPedidosExame({ patientId, token, role }: Props
                             type="button"
                             disabled={isUpdating}
                             onClick={() => updateStatus(item.id, nextStatus)}
-                            className="inline-flex items-center gap-1 text-xs text-ink-700 bg-cream-200 hover:bg-gray-700 border border-cream-300 rounded-lg px-3 py-1.5 disabled:opacity-50"
+                            className="inline-flex items-center gap-1 text-xs text-ink-700 bg-cream-200 hover:bg-cream-300 border border-cream-300 rounded-lg px-3 py-1.5 disabled:opacity-50"
                           >
                             Marcar como: {statusLabels[nextStatus]}
                           </button>

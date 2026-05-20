@@ -31,6 +31,7 @@ const Atendimento = () => <div className="p-8"><h1>Módulo Atendimento (Em breve
 function App() {
   return (
     <AuthProvider>
+      <PreferencesProvider>
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -63,7 +64,7 @@ function App() {
               <Route path="exames" element={<ClinicoPlaceholderPage title="Exames" />} />
               <Route path="chat" element={<ClinicoPlaceholderPage title="Chat" />} />
               <Route path="financeiro" element={<ClinicoFinanceiroPage />} />
-              <Route path="configuracoes" element={<ClinicoPlaceholderPage title="Configurações" />} />
+              <Route path="configuracoes" element={<ClinicoConfiguracoesPage />} />
             </Route>
           </Route>
 
@@ -89,6 +90,7 @@ function App() {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </Router>
+      </PreferencesProvider>
     </AuthProvider>
   );
 }

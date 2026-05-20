@@ -118,13 +118,13 @@ export default function BackofficeClinicasPage() {
           </select>
           <button
             onClick={() => void fetchClinics()}
-            className="bg-cream-200 hover:bg-gray-700 text-ink-900 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+            className="bg-cream-200 hover:bg-cream-300 text-ink-900 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
           >
             Filtrar
           </button>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-navy-500 hover:bg-navy-600 text-ink-900 px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-colors whitespace-nowrap"
+            className="bg-navy-500 hover:bg-navy-600 text-cream-50 px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-colors whitespace-nowrap"
           >
             <Plus className="w-4 h-4" />
             Nova Clínica

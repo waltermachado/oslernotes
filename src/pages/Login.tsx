@@ -136,7 +136,7 @@ export default function Login() {
               <CheckCircle2 className="h-4 w-4 text-sage-400" />
               <span>Autenticação 2FA ativa</span>
             </div>
-            <div className="hidden sm:block w-1 h-1 bg-gray-700 rounded-full" />
+            <div className="hidden sm:block w-1 h-1 bg-cream-300 rounded-full" />
             <div className="flex items-center space-x-1.5">
               <CheckCircle2 className="h-4 w-4 text-sage-400" />
               <span>Em conformidade LGPD / HIPAA</span>

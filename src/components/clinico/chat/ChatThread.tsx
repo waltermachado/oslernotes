@@ -32,7 +32,7 @@ export default function ChatThread(props: { contact: ChatContact | null }) {
     <section className="h-full flex flex-col bg-[#141010]/40">
       <div className="h-16 px-5 flex items-center justify-between border-b border-cream-300">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-full bg-gray-700/50 flex items-center justify-center text-xs font-semibold text-ink-900">
+          <div className="w-9 h-9 rounded-full bg-navy-100 flex items-center justify-center text-xs font-semibold text-ink-900">
             {initials(props.contact.name)}
           </div>
           <div className="min-w-0">
@@ -93,7 +93,7 @@ export default function ChatThread(props: { contact: ChatContact | null }) {
           <button
             className={cn(
               'w-10 h-10 rounded-xl flex items-center justify-center transition-colors',
-              text.trim() ? 'bg-navy-500 hover:bg-navy-600 text-ink-900' : 'bg-gray-700/40 text-ink-500',
+              text.trim() ? 'bg-navy-500 hover:bg-navy-600 text-cream-50' : 'bg-cream-200/50 text-ink-500',
             )}
             aria-label="Enviar"
             type="button"
@@ -135,7 +135,7 @@ function MessageBubble(props: { message: ChatMessage }) {
   return (
     <div className={cn('flex items-end gap-2', isOut ? 'justify-end' : 'justify-start')}>
       {!isOut ? (
-        <div className="w-7 h-7 rounded-full bg-gray-700/50 flex items-center justify-center text-[10px] font-semibold text-ink-900 shrink-0">
+        <div className="w-7 h-7 rounded-full bg-navy-100 flex items-center justify-center text-[10px] font-semibold text-ink-900 shrink-0">
           A
         </div>
       ) : null}
@@ -158,7 +158,7 @@ function MessageBubble(props: { message: ChatMessage }) {
       </div>
 
       {isOut ? (
-        <div className="w-7 h-7 rounded-full bg-gray-700/50 flex items-center justify-center text-[10px] font-semibold text-ink-900 shrink-0">
+        <div className="w-7 h-7 rounded-full bg-navy-100 flex items-center justify-center text-[10px] font-semibold text-ink-900 shrink-0">
           EU
         </div>
       ) : null}

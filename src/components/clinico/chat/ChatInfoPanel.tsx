@@ -21,7 +21,7 @@ export default function ChatInfoPanel(props: { contact: ChatContact | null }) {
     <aside className="h-full border-l border-cream-300 bg-[#1a1513]/40">
       <div className="p-6">
         <div className="flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-full bg-gray-700/50 flex items-center justify-center text-lg font-semibold text-ink-900">
+          <div className="w-20 h-20 rounded-full bg-navy-100 flex items-center justify-center text-lg font-semibold text-ink-900">
             {initials(props.contact.name)}
           </div>
           <div className="mt-4 text-lg font-semibold text-ink-900">{props.contact.name}</div>

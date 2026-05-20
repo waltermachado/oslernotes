@@ -78,7 +78,7 @@ export default function ClinicDetailSummaryCards(props: {
           </select>
           <button
             onClick={props.onAssignPlan}
-            className="bg-navy-500 hover:bg-navy-600 text-ink-900 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+            className="bg-navy-500 hover:bg-navy-600 text-cream-50 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
           >
             Aplicar
           </button>
@@ -124,7 +124,7 @@ export default function ClinicDetailSummaryCards(props: {
             </select>
             <button
               onClick={() => void send()}
-              className="bg-cream-200 hover:bg-gray-700 text-ink-900 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+              className="bg-cream-200 hover:bg-cream-300 text-ink-900 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
             >
               Enviar credencial
             </button>

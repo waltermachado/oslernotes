@@ -127,7 +127,7 @@ export default function ProntuarioAtestados({ patientId, token, role }: Props) {
           <button
             type="button"
             onClick={() => setShowForm(true)}
-            className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-ink-900 text-sm"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-cream-50 text-sm"
           >
             <Plus className="w-4 h-4" />
             Novo Atestado
@@ -204,7 +204,7 @@ export default function ProntuarioAtestados({ patientId, token, role }: Props) {
               type="button"
               onClick={onSave}
               disabled={saving}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-ink-900 disabled:opacity-60 text-sm"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-500 hover:bg-navy-600 text-cream-50 disabled:opacity-60 text-sm"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Salvando...' : 'Salvar Atestado'}
