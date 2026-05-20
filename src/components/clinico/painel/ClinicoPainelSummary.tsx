@@ -47,16 +47,6 @@ export default function ClinicoPainelSummary() {
         const startOfDay = `${today}T00:00:00`
         const endOfDay = `${today}T23:59:59`
 
-        // Build base query filters shared across counts
-        const applyBaseFilters = (q: ReturnType<typeof supabase.from>) => {
-          let filtered = (q as unknown as ReturnType<typeof supabase.from<'atendimentos', unknown>>)
-          filtered = filtered.eq('clinica_id', clinicaId)
-          if (isMedico && user?.id) {
-            filtered = filtered.eq('medico_id', user.id)
-          }
-          return filtered
-        }
-
         // Consultas do Dia: scheduled_time in today range, status != cancelado
         let qDia = supabase
           .from('atendimentos')
