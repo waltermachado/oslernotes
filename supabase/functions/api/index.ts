@@ -457,6 +457,68 @@ serve(async (req: Request) => {
       }
 
       // ------------------------------------------------------------------
+      // /patients/:id/record → retorna dados do paciente com nível de visibilidade
+      // ------------------------------------------------------------------
+      if (parts.length === 3 && parts[2] === 'record' && req.method === 'GET') {
+        const { data: patient, error: pErr } = await admin
+          .from('pacientes')
+          .select('*')
+          .eq('clinica_id', auth.ctx.clinicaId)
+          .eq('id', patientId)
+          .single()
+        if (pErr || !patient) return json(req, 404, { error: 'Patient not found' })
+
+        const fotoUrl = await signedPhotoUrl(admin, patient.foto_path ?? null)
+
+        const isMedico = auth.ctx.role === 'medico'
+        if (isMedico) {
+          return json(req, 200, {
+            patient: {
+              id: patient.id,
+              nome_completo: patient.nome_completo,
+              cpf: patient.cpf ? String(patient.cpf).replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : null,
+              data_nascimento: patient.data_nascimento,
+              sexo: patient.sexo ?? null,
+              convenio: patient.convenio ?? null,
+              foto_url: fotoUrl,
+              updated_at: patient.updated_at ?? null,
+              email: patient.email ?? null,
+              telefone: patient.telefone ?? null,
+              endereco: patient.endereco ?? {},
+              numero_carteirinha: patient.numero_carteirinha ?? null,
+              nome_mae: patient.nome_mae ?? null,
+              alergias: patient.alergias ?? [],
+              doencas: Array.isArray(patient.doencas) ? patient.doencas : [],
+              medicamentos_em_uso: patient.medicamentos_em_uso ?? [],
+              remedios: Array.isArray(patient.remedios) ? patient.remedios : [],
+              historico_breve_doencas: patient.historico_breve_doencas ?? null,
+              queixa_principal: patient.queixa_principal ?? null,
+              futuras_anotacoes: patient.futuras_anotacoes ?? null,
+            },
+            visibility: { level: 'full' },
+          })
+        }
+
+        // admin / atendente → visibilidade limitada
+        return json(req, 200, {
+          patient: {
+            id: patient.id,
+            nome_completo: patient.nome_completo,
+            cpf: patient.cpf ? String(patient.cpf).replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : null,
+            data_nascimento: patient.data_nascimento,
+            sexo: patient.sexo ?? null,
+            convenio: patient.convenio ?? null,
+            foto_url: fotoUrl,
+            updated_at: patient.updated_at ?? null,
+            alergias: patient.alergias ?? [],
+            doencas: Array.isArray(patient.doencas) ? patient.doencas : [],
+            medicamentos_em_uso: patient.medicamentos_em_uso ?? [],
+          },
+          visibility: { level: 'limited' },
+        })
+      }
+
+      // ------------------------------------------------------------------
       // atestados → tabela: atestados
       // Real columns: dias_afastamento, cid, data_retorno, observacoes,
       //   texto (added via migration — nullable)

@@ -215,6 +215,7 @@ export default function ClinicoPacientesPage() {
       const { error: insertError } = await supabase
         .from('atendimentos')
         .insert({
+          clinica_id: user?.clinica_id ?? null,
           paciente_id: patientId,
           status: 'aguardando',
           prioridade: 0,
